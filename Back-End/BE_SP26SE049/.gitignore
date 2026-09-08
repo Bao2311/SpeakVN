@@ -1,0 +1,64 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+hs_err_pid*.log
+
+replay_pid*.log 
+
+# --- Tối ưu thêm cho Backend ---
+*.log
+*.temp
+*.tmp
+
+# Tránh lộ password DB cá nhân hoặc API Key (nếu nhóm có dùng)
+.env
+bin/
+out/
+
+# Cấu hình riêng của máy (nếu có dùng local profile)
+src/main/resources/application-local.properties
+src/main/resources/application-local.yml
+
+# --- Cho Windows (Vì bạn đang dùng Windows) ---
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# --- Cho MacOS (Phòng hờ bạn khác trong nhóm dùng MacBook) ---
+.DS_Store
+.AppleDouble
+.LSOverride
+src/main/resources/firebase-service-account.json
+
+# Local Hugging Face deployment folder
+LocalASR_Server_hf_deploy/

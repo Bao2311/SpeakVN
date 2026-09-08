@@ -1,0 +1,43 @@
+# ==================== BACKEND (Java/Maven/Spring Boot) ====================
+Back-End/**/target/
+Back-End/**/.mvn/
+Back-End/**/mvnw
+Back-End/**/mvnw.cmd
+Back-End/**/*.class
+Back-End/**/*.jar
+Back-End/**/*.war
+
+# Backend config files with secrets
+Back-End/**/application-local.yaml
+Back-End/**/application-local.properties
+Back-End/**/*.env
+
+# IDE
+Back-End/**/.idea/
+Back-End/**/*.iml
+Back-End/**/.settings/
+Back-End/**/.classpath
+Back-End/**/.project
+
+# ==================== FRONTEND (Node/React/Vite) ====================
+Front-End/**/node_modules/
+Front-End/**/dist/
+Front-End/**/build/
+Front-End/**/.env
+Front-End/**/.env.local
+Front-End/**/.env.development
+Front-End/**/.env.production
+Front-End/**/.env.*.local
+
+# Cache
+Front-End/**/.vite/
+Front-End/**/.cache/
+
+# IDE
+Front-End/**/.vscode/
+
+# ==================== CHUNG ====================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
