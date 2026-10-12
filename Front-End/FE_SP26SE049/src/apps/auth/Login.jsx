@@ -366,7 +366,7 @@ function LoginForm() {
                 Đăng Nhập Tài Khoản
               </h1>
               <p className="text-slate-500 text-xs font-bold mt-1">
-                Nhập thông tin bên dưới hoặc nhấn vào một trong 3 vai trò mẫu để trải nghiệm nhanh.
+                Nhập thông tin bên dưới hoặc nhấn vào một trong 2 tài khoản học viên mẫu để trải nghiệm nhanh.
               </p>
             </div>
 

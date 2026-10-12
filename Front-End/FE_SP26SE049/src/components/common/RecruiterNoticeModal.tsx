@@ -277,29 +277,6 @@ export const RecruiterNoticeModal: React.FC<RecruiterNoticeModalProps> = ({
                     )
                   })}
                 </div>
-
-                {/* Role Admin/Educator note */}
-                <div className="p-3.5 bg-slate-100 border-[2px] border-slate-900 rounded-2xl flex items-start gap-2.5 text-xs text-slate-700">
-                  <Shield size={18} className="text-indigo-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-black text-slate-900 block mb-0.5">
-                      Lưu ý về tài khoản Quản trị &amp; Giảng viên:
-                    </span>
-                    <p className="font-bold text-[11px] leading-relaxed text-slate-600">
-                      Để bảo vệ dữ liệu cấu hình hệ thống trên Production, các tài khoản{' '}
-                      <code className="bg-white px-1.5 py-0.5 rounded border border-slate-300 text-slate-800 font-black">
-                        admin@fsa.com
-                      </code>{' '}
-                      và{' '}
-                      <code className="bg-white px-1.5 py-0.5 rounded border border-slate-300 text-slate-800 font-black">
-                        educator@fsa.com
-                      </code>{' '}
-                      được ẩn khỏi thanh chọn nhanh công khai (mật khẩu chuẩn:{' '}
-                      <span className="font-black text-slate-900">User@123</span>). Hội đồng tuyển dụng có thể nhập trực tiếp
-                      để kiểm tra các trang Dashboard quản trị nội bộ.
-                    </p>
-                  </div>
-                </div>
               </div>
             )}
 
