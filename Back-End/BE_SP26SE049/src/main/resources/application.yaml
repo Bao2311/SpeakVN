@@ -11,7 +11,7 @@ spring:
   # JPA/Database Configuration
   jpa:
     hibernate:
-      ddl-auto: validate  # Ensuring schema matches Entities
+      ddl-auto: ${DDL_AUTO:none}  # Schema already initialized via schema.sql & seed_sample_data.sql
     show-sql: false
     properties:
       hibernate:
@@ -37,7 +37,7 @@ spring:
 
   # Liquibase Configuration
   liquibase:
-    enabled: true
+    enabled: ${LIQUIBASE_ENABLED:false}  # Disabled because database is initialized via SQL scripts
     change-log: classpath:db/changelog/db.changelog-master.xml
 
   # Jackson Configuration (JavaTimeModule & disable timestamps via JacksonConfig.java)
