@@ -332,71 +332,90 @@ function LoginForm() {
 
             {/* Quick Login Role Selector */}
             <div className="mb-5 p-3.5 bg-amber-50/90 border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937]">
-              <div className="flex items-center justify-between mb-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2.5">
                 <span className="text-[11px] font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
                   <Zap size={14} className="text-amber-500 fill-amber-500" />
-                  Đăng nhập nhanh 3 vai trò:
+                  Đăng nhập nhanh 4 tài khoản demo:
                 </span>
-                <span className="text-[9px] font-black text-slate-600 bg-white px-2 py-0.5 rounded-lg border border-slate-300 shadow-[1px_1px_0_#cbd5e1]">
+                <span className="text-[9px] font-black text-slate-600 bg-white px-2 py-0.5 rounded-lg border border-slate-300 shadow-[1px_1px_0_#cbd5e1] self-start sm:self-auto">
                   Mật khẩu: Pen1112003@
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleQuickSelect('admin@fsa.com', 'Admin')}
+                  onClick={() => handleQuickSelect('admin@fsa.com', 'Quản trị viên')}
                   className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
-                    selectedRole === 'Admin'
+                    selectedRole === 'Quản trị viên'
                       ? 'bg-rose-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
                       : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="text-sm">🛡️</span>
-                    {selectedRole === 'Admin' && <CheckCircle2 size={12} className="text-white" />}
+                    {selectedRole === 'Quản trị viên' && <CheckCircle2 size={12} className="text-white" />}
                   </div>
                   <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Quản trị viên</div>
-                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Admin' ? 'text-white/80' : 'text-slate-500'}`}>admin@fsa.com</div>
+                    <div className="text-xs font-black leading-tight">Quản trị</div>
+                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Quản trị viên' ? 'text-white/80' : 'text-slate-500'}`}>admin@fsa.com</div>
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleQuickSelect('educator@fsa.com', 'Educator')}
+                  onClick={() => handleQuickSelect('educator@fsa.com', 'Giảng viên')}
                   className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
-                    selectedRole === 'Educator'
+                    selectedRole === 'Giảng viên'
                       ? 'bg-purple-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
                       : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="text-sm">🎓</span>
-                    {selectedRole === 'Educator' && <CheckCircle2 size={12} className="text-white" />}
+                    {selectedRole === 'Giảng viên' && <CheckCircle2 size={12} className="text-white" />}
                   </div>
                   <div className="mt-1">
                     <div className="text-xs font-black leading-tight">Giảng viên</div>
-                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Educator' ? 'text-white/80' : 'text-slate-500'}`}>educator@fsa.com</div>
+                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Giảng viên' ? 'text-white/80' : 'text-slate-500'}`}>educator@fsa.com</div>
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleQuickSelect('student@fsa.com', 'Student')}
+                  onClick={() => handleQuickSelect('student@fsa.com', 'Học viên 1')}
                   className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
-                    selectedRole === 'Student'
+                    selectedRole === 'Học viên 1'
                       ? 'bg-sky-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
                       : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="text-sm">🎒</span>
-                    {selectedRole === 'Student' && <CheckCircle2 size={12} className="text-white" />}
+                    {selectedRole === 'Học viên 1' && <CheckCircle2 size={12} className="text-white" />}
                   </div>
                   <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Học viên</div>
-                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Student' ? 'text-white/80' : 'text-slate-500'}`}>student@fsa.com</div>
+                    <div className="text-xs font-black leading-tight">Học viên 1</div>
+                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Học viên 1' ? 'text-white/80' : 'text-slate-500'}`}>student@fsa.com</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickSelect('tested_student@fsa.com', 'Học viên 2')}
+                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                    selectedRole === 'Học viên 2'
+                      ? 'bg-emerald-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
+                      : 'bg-white hover:bg-emerald-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-sm">🎒</span>
+                    {selectedRole === 'Học viên 2' && <CheckCircle2 size={12} className="text-white" />}
+                  </div>
+                  <div className="mt-1">
+                    <div className="text-xs font-black leading-tight">Học viên 2</div>
+                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Học viên 2' ? 'text-white/80' : 'text-slate-500'}`}>tested_student...</div>
                   </div>
                 </button>
               </div>

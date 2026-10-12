@@ -3,6 +3,7 @@ import { Avatar, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Send, X } from "lucide-react";
 import clsx from "clsx";
+import { getAvatarUrl, getInitials } from "../../../utils/avatar";
 import { useAuth } from "../../../core/auth/AuthContext";
 import { formatMessageTime, useChat } from "../hooks/useChat";
 
@@ -73,11 +74,12 @@ export default function ChatBox({
         <div className="flex items-center gap-3 min-w-0">
           <div className="p-0.5 bg-white rounded-xl border-[1.5px] border-[#263D5B] shadow-[2px_2px_0_#263D5B] flex-shrink-0">
             <Avatar
-              src={friendAvatar}
-              icon={!friendAvatar && <UserOutlined />}
+              src={getAvatarUrl(friendAvatar, friendName)}
               size={integrated ? 36 : 30}
-              className="bg-sky-50 rounded-lg"
-            />
+              className="bg-sky-50 rounded-lg font-black text-xs text-slate-800"
+            >
+              {getInitials(friendName)}
+            </Avatar>
           </div>
           <div className="flex flex-col min-w-0">
             <div className={clsx("font-black uppercase tracking-wider font-nunito text-[#263D5B] truncate", integrated ? "text-base" : "text-sm")}>

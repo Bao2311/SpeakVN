@@ -54,7 +54,7 @@ INSERT INTO account (
     avatar_url = EXCLUDED.avatar_url,
     full_name = EXCLUDED.full_name;
 
--- Demo Learner (Giọng Nam): student@fsa.com
+-- Demo Learner 1 (Giọng Nam): student@fsa.com
 -- 21 stars exactly matching 7 completed quizzes (7 * 3 = 21)
 INSERT INTO account (
     id, email, password_hash, role_code, full_name, avatar_url, email_verified, is_active,
@@ -64,7 +64,7 @@ INSERT INTO account (
     'student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Học viên',
+    'Học viên 1',
     'https://api.dicebear.com/7.x/adventurer/svg?seed=HocVienDemo',
     TRUE, TRUE, 'SOUTH', TRUE, 21, 450, 3, 5, 2, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
@@ -80,7 +80,7 @@ INSERT INTO account (
     avatar_url = EXCLUDED.avatar_url,
     full_name = EXCLUDED.full_name;
 
--- Tested Learner (Giọng Bắc): tested_student@fsa.com
+-- Demo Learner 2 (Giọng Bắc): tested_student@fsa.com
 INSERT INTO account (
     id, email, password_hash, role_code, full_name, avatar_url, email_verified, is_active,
     region, has_done_entry_test, total_stars, total_experience, current_streak_days, max_streak_days, badge_count, created_at, updated_at
@@ -89,7 +89,7 @@ INSERT INTO account (
     'tested_student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Học viên thử nghiệm',
+    'Học viên 2',
     'https://api.dicebear.com/7.x/adventurer/svg?seed=HocVienNorth',
     TRUE, TRUE, 'NORTH', TRUE, 21, 450, 5, 7, 3, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
@@ -141,6 +141,8 @@ INSERT INTO friendship (id, requester_id, addressee_id, status, created_at, upda
 ('00000000-0000-0007-0001-000000000006', '00000000-0000-0000-0002-000000000015', '00000000-0000-0000-0002-000000000002', 'PENDING', NOW() - INTERVAL '1 day', NOW()),
 -- friend request sent
 ('00000000-0000-0007-0001-000000000007', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000016', 'PENDING', NOW() - INTERVAL '5 hours', NOW()),
+-- Friendship between 2 demo students so they can chat with each other!
+('00000000-0000-0007-0001-000000000099', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000003', 'ACCEPTED', NOW() - INTERVAL '15 days', NOW()),
 -- tested_student friendships
 ('00000000-0000-0007-0001-000000000008', '00000000-0000-0000-0002-000000000010', '00000000-0000-0000-0002-000000000003', 'ACCEPTED', NOW() - INTERVAL '15 days', NOW()),
 ('00000000-0000-0007-0001-000000000009', '00000000-0000-0000-0002-000000000013', '00000000-0000-0000-0002-000000000003', 'ACCEPTED', NOW() - INTERVAL '7 days', NOW())
@@ -337,7 +339,9 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO chat_message (id, sender_id, recipient_id, content, "timestamp", status, created_at, updated_at) VALUES
 ('00000000-0000-0006-0002-000000000001', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000003', 'Chào bạn, hôm nay bạn đã luyện phát âm âm n/l chưa?', NOW() - INTERVAL '4 hours', 'READ', NOW() - INTERVAL '4 hours', NOW()),
 ('00000000-0000-0006-0002-000000000002', '00000000-0000-0000-0002-000000000003', '00000000-0000-0000-0002-000000000002', 'Mình vừa hoàn thành xong 3 thử thách hàng ngày rồi, được 95% điểm nè!', NOW() - INTERVAL '3 hours', 'READ', NOW() - INTERVAL '3 hours', NOW()),
-('00000000-0000-0006-0002-000000000003', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000003', 'Tuyệt vời quá! Tuần này cố gắng giữ vị trí top bảng xếp hạng giải đấu nhé!', NOW() - INTERVAL '1 hour', 'SENT', NOW() - INTERVAL '1 hour', NOW())
+('00000000-0000-0006-0002-000000000003', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000003', 'Tuyệt vời quá! Tuần này cố gắng giữ vị trí top bảng xếp hạng giải đấu nhé!', NOW() - INTERVAL '1 hour', 'READ', NOW() - INTERVAL '1 hour', NOW()),
+('00000000-0000-0006-0002-000000000004', '00000000-0000-0000-0002-000000000003', '00000000-0000-0000-0002-000000000002', 'Nhất trí luôn bạn ơi! Tối nay cùng vào luyện thêm 15 phút bài âm tr/ch nhé.', NOW() - INTERVAL '30 minutes', 'READ', NOW() - INTERVAL '30 minutes', NOW()),
+('00000000-0000-0006-0002-000000000005', '00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0002-000000000003', 'Okie bạn nhé, hẹn gặp lại tối nay! 🎉', NOW() - INTERVAL '10 minutes', 'READ', NOW() - INTERVAL '10 minutes', NOW())
 ON CONFLICT (id) DO UPDATE SET
     content = EXCLUDED.content,
     sender_id = EXCLUDED.sender_id,
