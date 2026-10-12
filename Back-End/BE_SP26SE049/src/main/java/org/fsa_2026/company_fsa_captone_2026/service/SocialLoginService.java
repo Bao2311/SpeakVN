@@ -210,7 +210,9 @@ public class SocialLoginService {
                     .passwordHash("SOCIAL_LOGIN_" + provider) // Placeholder, cannot be used for normal login
                     .roleCode(RoleCode.USER)
                     .fullName(name != null ? name : email.split("@")[0])
-                    .avatarUrl(pictureUrl)
+                    .avatarUrl((pictureUrl != null && !pictureUrl.isBlank())
+                            ? pictureUrl
+                            : "https://api.dicebear.com/7.x/adventurer/svg?seed=" + java.net.URLEncoder.encode(name != null ? name : email.split("@")[0], java.nio.charset.StandardCharsets.UTF_8))
                     .isActive(true)
                     .emailVerified(true) // Social login = email already verified by provider
                     .build();

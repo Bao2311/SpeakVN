@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { Avatar, message, Modal } from 'antd'
 import clsx from 'clsx'
+import { getAvatarUrl, getInitials } from '../../../utils/avatar'
 import apiClient from '../../../services/apiClient'
 import { useAuth } from '../../../core/auth/AuthContext'
 import { useAudioRecorder } from '../../../hooks/useAudioRecorder'
@@ -612,10 +613,12 @@ export default function TournamentPage() {
                                 {cfg.badge}
                               </div>
                               <Avatar
-                                src={e.avatarUrl}
+                                src={getAvatarUrl(e.avatarUrl, e.fullName)}
                                 size={cfg.size}
-                                className={clsx("bg-white", cfg.ring)}
-                              />
+                                className={clsx("bg-white text-slate-800 font-black", cfg.ring)}
+                              >
+                                {getInitials(e.fullName)}
+                              </Avatar>
                               {isMe && (
                                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-purple-600 rounded-full border-[1.5px] border-slate-900 flex items-center justify-center z-10">
                                   <span className="text-white text-[9px] font-black">✓</span>
@@ -661,7 +664,13 @@ export default function TournamentPage() {
                           )}>
                             {e.rankPosition}
                           </div>
-                          <Avatar src={e.avatarUrl} size={32} className="border-[1.5px] border-slate-900 shrink-0" />
+                          <Avatar
+                            src={getAvatarUrl(e.avatarUrl, e.fullName)}
+                            size={32}
+                            className="border-[1.5px] border-slate-900 shrink-0 font-black text-xs text-slate-800"
+                          >
+                            {getInitials(e.fullName)}
+                          </Avatar>
                           <div className="flex-1 min-w-0">
                             <p className="font-black text-slate-800 text-xs truncate">{e.fullName || 'Học viên'}</p>
                             <p className="text-[9px] text-slate-400 font-bold">Hoàn thành: {e.challengesCompleted}/{tournament.challenges?.length ?? 10} câu</p>
@@ -729,7 +738,13 @@ export default function TournamentPage() {
                                     <span className="text-base shrink-0">
                                       {isGold ? '🥇' : isSilver ? '🥈' : '🥉'}
                                     </span>
-                                    <Avatar src={winner.avatarUrl} size={22} className="border border-slate-900 shrink-0" />
+                                    <Avatar
+                                      src={getAvatarUrl(winner.avatarUrl, winner.fullName)}
+                                      size={22}
+                                      className="border border-slate-900 shrink-0 font-black text-[9px] text-slate-800"
+                                    >
+                                      {getInitials(winner.fullName)}
+                                    </Avatar>
                                     <span className="font-black text-slate-800 text-xs truncate max-w-[140px]">
                                       {winner.fullName || 'Học viên'}
                                     </span>

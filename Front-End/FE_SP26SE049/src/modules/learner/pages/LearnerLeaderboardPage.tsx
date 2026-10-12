@@ -6,6 +6,7 @@ import { useAuth } from '../../../core/auth/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DoodleLoading } from '../../../components/ui/DoodleLoading';
 import clsx from 'clsx';
+import { getAvatarUrl, getInitials } from '../../../utils/avatar';
 
 /* ─── Types ─────────────────────────────────────────── */
 interface LeaderboardEntry {
@@ -76,10 +77,12 @@ const Podium = ({ entries, userId }: { entries: LeaderboardEntry[]; userId?: str
                                 {cfg.badge}
                             </div>
                             <Avatar
-                                src={e.avatar_url || e.avatarUrl}
+                                src={getAvatarUrl(e.avatar_url || e.avatarUrl, e.fullName)}
                                 size={cfg.size}
-                                className={clsx("bg-white", cfg.ring)}
-                            />
+                                className={clsx("bg-white text-slate-800 font-black", cfg.ring)}
+                            >
+                                {getInitials(e.fullName)}
+                            </Avatar>
                             {isMe && (
                                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-600 rounded-full border-[2px] border-slate-900 shadow-[2px_2px_0_#1f2937] flex items-center justify-center z-10">
                                     <CheckCircle2 size={12} className="text-white" />
@@ -131,10 +134,12 @@ const Row = ({ e, idx, userId }: { e: LeaderboardEntry; idx: number; userId?: st
             </div>
             <div className="relative flex-shrink-0">
                 <Avatar
-                    src={e.avatar_url || e.avatarUrl}
+                    src={getAvatarUrl(e.avatar_url || e.avatarUrl, e.fullName)}
                     size={40}
-                    className={clsx("border-[2px] border-slate-900", isMe ? "bg-purple-100" : "bg-white")}
-                />
+                    className={clsx("border-[2px] border-slate-900 font-black text-xs", isMe ? "bg-purple-100 text-purple-700" : "bg-white text-slate-700")}
+                >
+                    {getInitials(e.fullName)}
+                </Avatar>
                 {isMe && (
                     <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-purple-600 rounded-full border-[1.5px] border-slate-900 flex items-center justify-center z-10 shadow-[1px_1px_0_#1f2937]">
                         <CheckCircle2 size={10} className="text-white" />

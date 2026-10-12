@@ -11,6 +11,7 @@ import {
   getLearnerOnboardingPath,
   isLearnerOnboardingPath,
 } from "../../../utils/onboarding";
+import { getAvatarUrl } from "../../../utils/avatar";
 import clsx from "clsx";
 import { apiClient } from "../../../services/apiClient";
 import { motion, AnimatePresence } from "framer-motion";
@@ -242,7 +243,7 @@ export default function LearnerLayout() {
               <Dropdown menu={userMenu} placement="bottomRight" trigger={["click"]}>
                 <button type="button" className="flex items-center gap-2 rounded-full border-[2px] border-slate-900 bg-white p-0.5 pr-2.5 shadow-[3px_3px_0_#1f2937] transition-transform hover:-translate-y-0.5">
                   <Avatar
-                    src={avatarErr ? null : (user.avatar_url || user.avatar)}
+                    src={avatarErr ? getAvatarUrl(null, user.fullName) : getAvatarUrl(user.avatar_url || user.avatar, user.fullName)}
                     onError={() => { setAvatarErr(true); return true; }}
                     size={32}
                     className="bg-[#49B6E5] text-white border-2 border-white flex items-center justify-center font-black text-xs"

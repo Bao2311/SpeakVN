@@ -3,7 +3,7 @@ import { Form, Input, Button, message, Checkbox } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../core/auth/AuthContext'
 import { getLearnerOnboardingPath } from '../../utils/onboarding'
-import { Lock, Mail, Home, Sparkles, User, ArrowRight, Zap } from 'lucide-react'
+import { Lock, Mail, Home, Sparkles, User, ArrowRight, Zap, CheckCircle2, Shield, GraduationCap, Backpack, Award, Users, Mic } from 'lucide-react'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
 import { motion } from 'framer-motion'
 import { DoodleLoading } from '../../components/ui/DoodleLoading'
@@ -105,33 +105,36 @@ function LoginForm() {
           return
         }
 
-        const popupUrl = popup.location.href
-        if (popupUrl && popupUrl.startsWith(window.location.origin)) {
+        const currentUrl = popup.location.href
+        if (currentUrl.includes(FB_REDIRECT_URI) || currentUrl.includes('access_token=')) {
           clearInterval(pollTimer)
-          const hash = popup.location.hash
+
+          const hash = popup.location.hash.substring(1)
+          const params = new URLSearchParams(hash)
+          const accessToken = params.get('access_token')
+
           popup.close()
 
-          if (hash) {
-            const params = new URLSearchParams(hash.substring(1))
-            const accessToken = params.get('access_token')
-
-            if (accessToken) {
-              socialLogin('FACEBOOK', accessToken)
-                .then((session) => {
-                  message.success(`Chào mừng ${session.user.fullName}!`)
-                  navigateByRole(session)
-                })
-                .catch((err) => {
-                  message.error(err?.message ?? 'Đăng nhập Facebook thất bại.')
-                })
-                .finally(() => setFacebookLoading(false))
-              return
-            }
+          if (accessToken) {
+            socialLogin('FACEBOOK', accessToken)
+              .then((session) => {
+                message.success(`Chào mừng ${session.user.fullName}!`)
+                navigateByRole(session)
+              })
+              .catch((err) => {
+                const backendMsg = err?.response?.data?.message
+                message.error(backendMsg ?? err?.message ?? 'Đăng nhập Facebook thất bại.')
+              })
+              .finally(() => {
+                setFacebookLoading(false)
+              })
+          } else {
+            message.error('Không nhận được token từ Facebook.')
+            setFacebookLoading(false)
           }
-          message.error('Đăng nhập Facebook thất bại. Không nhận được token.')
-          setFacebookLoading(false)
         }
-      } catch (e) {
+      } catch {
+        // Cross-origin restriction before redirect - ignore
       }
     }, 500)
   }
@@ -155,309 +158,427 @@ function LoginForm() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fbf6ef] flex items-center justify-center">
+      <div className="min-h-screen bg-[#fbf6ef] flex items-center justify-center font-nunito">
         <DoodleLoading message="Đang đưa bạn vào hệ thống..." />
       </div>
     )
   }
 
   return (
-    <div className="h-screen w-full bg-[#fbf6ef] flex items-center justify-center p-4 sm:p-2 font-nunito relative overflow-hidden">
+    <div className="min-h-screen w-full bg-[#fbf6ef] flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-nunito relative overflow-hidden">
 
-      {/* Decorative Doodles (Absolute positioning) */}
-      <div className="absolute top-10 left-10 pointer-events-none opacity-20">
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="currentColor" className="text-slate-900 animate-float">
-          <path d="M20,50 Q35,20 50,50 T80,50" strokeWidth="3" fill="none" />
-        </svg>
-      </div>
-      <div className="absolute bottom-10 right-10 pointer-events-none opacity-20">
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="currentColor" className="text-slate-900 animate-float" style={{ animationDelay: '2s' }}>
-          <circle cx="60" cy="60" r="40" strokeWidth="3" strokeDasharray="10 5" />
-          <path d="M40,60 L80,60 M60,40 L60,80" strokeWidth="3" />
-        </svg>
+      {/* Background Ambience & Doodle Accents */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 20px 20px, #cbd5e1 1.5px, transparent 0)', backgroundSize: '40px 40px' }} />
       </div>
 
-      {/* Back to Home Button */}
-      <Link
-        to="/"
-        className="absolute top-6 left-6 z-20 flex items-center gap-2 px-5 py-2.5 bg-white border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937] text-slate-900 hover:bg-sky-50 transition-all font-black text-xs uppercase tracking-widest active:translate-y-0.5 active:shadow-none"
-      >
-        <Home size={16} strokeWidth={2.5} />
-        Về Trang Chủ
-      </Link>
+      {/* Floating Feature Badges for wide screens */}
+      <div className="hidden 2xl:flex flex-col gap-4 absolute top-28 left-8 pointer-events-none z-10 max-w-xs animate-float">
+        <div className="bg-white/95 backdrop-blur-sm border-[2.5px] border-slate-900 rounded-2xl p-4 shadow-[5px_5px_0_#1f2937]">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="text-xl">🇻🇳</span>
+            <span className="font-black text-slate-900 text-xs uppercase tracking-wider">3 Vùng Miền Ngữ Âm</span>
+          </div>
+          <p className="text-[11px] text-slate-600 font-bold leading-relaxed">
+            Học chuẩn khẩu hình & ngữ điệu đặc trưng Bắc, Trung, Nam.
+          </p>
+        </div>
 
-      {/* Main Container */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-[900px] h-full max-h-[620px] bg-white rounded-[2.5rem] border-[3px] border-slate-900 shadow-[10px_10px_0_#1f2937] flex flex-col md:flex-row overflow-y-auto relative z-10"
-      >
+        <div className="bg-white/95 backdrop-blur-sm border-[2.5px] border-slate-900 rounded-2xl p-4 shadow-[5px_5px_0_#1f2937]">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="text-xl">🤖</span>
+            <span className="font-black text-slate-900 text-xs uppercase tracking-wider">AI Phân Tích Giọng Nói</span>
+          </div>
+          <p className="text-[11px] text-slate-600 font-bold leading-relaxed">
+            Nhận diện âm sai & hướng dẫn uốn lưỡi tức thì.
+          </p>
+        </div>
+      </div>
 
-        {/* ==================== LEFT SIDE - DOODLE POSTER ==================== */}
-        <div className="hidden md:block w-5/12 relative bg-slate-900 border-r-[3px] border-slate-900 overflow-hidden">
-          <img
-            src="/speakvn_simple_poster.png"
-            alt="SpeakVN"
-            className="absolute inset-0 w-full h-full object-cover opacity-80 transition-transform duration-[15s] ease-out hover:scale-110"
-          />
-          {/* Hand-drawn overlay elements */}
-          <div className="absolute inset-0 bg-[#49B6E5]/20 mix-blend-multiply"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+      <div className="hidden 2xl:flex flex-col gap-4 absolute bottom-20 right-8 pointer-events-none z-10 max-w-xs animate-float" style={{ animationDelay: '1.5s' }}>
+        <div className="bg-white/95 backdrop-blur-sm border-[2.5px] border-slate-900 rounded-2xl p-4 shadow-[5px_5px_0_#1f2937]">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="text-xl">🏆</span>
+            <span className="font-black text-slate-900 text-xs uppercase tracking-wider">Đấu Trường & Xếp Hạng</span>
+          </div>
+          <p className="text-[11px] text-slate-600 font-bold leading-relaxed">
+            Tranh cúp cùng bạn bè toàn quốc, nhận huy hiệu vinh danh.
+          </p>
+        </div>
 
-          <div className="absolute bottom-6 left-6 right-6 text-white space-y-3">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-orange-400 border-[2.5px] border-white shadow-[2px_2px_0_#ffffff33]">
-              <Sparkles size={20} className="text-white" strokeWidth={3} />
+        <div className="bg-white/95 backdrop-blur-sm border-[2.5px] border-slate-900 rounded-2xl p-4 shadow-[5px_5px_0_#1f2937]">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="text-xl">⭐</span>
+            <span className="font-black text-slate-900 text-xs uppercase tracking-wider">12.000+ Học Viên</span>
+          </div>
+          <p className="text-[11px] text-slate-600 font-bold leading-relaxed">
+            Cộng đồng học viên luyện nói tiếng Việt sôi động mỗi ngày.
+          </p>
+        </div>
+      </div>
+
+      {/* Top Navigation Bar */}
+      <header className="w-full max-w-6xl mx-auto flex items-center justify-between z-20 mb-4 sm:mb-6">
+        <Link
+          to="/"
+          className="flex items-center gap-2.5 px-4 py-2 bg-white border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937] text-slate-900 hover:bg-sky-50 transition-all font-black text-xs uppercase tracking-wider active:translate-y-0.5 active:shadow-none"
+        >
+          <Home size={16} strokeWidth={2.5} />
+          <span>Về Trang Chủ</span>
+        </Link>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-white border-[2px] border-slate-900 rounded-full shadow-[2px_2px_0_#1f2937]">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-black text-slate-800">Hệ thống hoạt động bình thường</span>
+          </div>
+          <Link
+            to="/register"
+            className="flex items-center gap-1.5 px-4 py-2 bg-amber-300 border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937] text-slate-900 hover:bg-amber-400 transition-all font-black text-xs uppercase tracking-wider active:translate-y-0.5 active:shadow-none"
+          >
+            <span>Đăng Ký</span>
+            <ArrowRight size={14} strokeWidth={3} />
+          </Link>
+        </div>
+      </header>
+
+      {/* Main Login Card */}
+      <main className="w-full flex items-center justify-center my-auto z-10 py-2">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-5xl bg-white rounded-[2.5rem] border-[3.5px] border-slate-900 shadow-[12px_12px_0_#1f2937] flex flex-col lg:flex-row overflow-hidden relative"
+        >
+          {/* ==================== LEFT SIDE - VISUAL SHOWCASE ==================== */}
+          <div className="w-full lg:w-5/12 bg-slate-900 border-b-[3.5px] lg:border-b-0 lg:border-r-[3.5px] border-slate-900 relative p-6 sm:p-8 flex flex-col justify-between overflow-hidden min-h-[320px] lg:min-h-[580px]">
+            {/* Background image & gradient overlay */}
+            <img
+              src="/speakvn_simple_poster.png"
+              alt="SpeakVN Poster"
+              className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105 hover:scale-110 transition-transform duration-1000"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a]/90 via-[#0369a1]/85 to-[#0e7490]/90" />
+
+            {/* Top Badge */}
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-white font-black text-[11px] tracking-wider uppercase">
+                <Sparkles size={14} className="text-amber-300" />
+                SpeakVN Luyện Ngữ Âm
+              </div>
+              <span className="text-xl">🇻🇳</span>
             </div>
-            <div>
-              <h2 className="text-3xl font-black leading-tight font-nunito uppercase tracking-tight">
-                Học Tiếng<br />
-                <span className="text-orange-400">Việt Thật</span><br />
-                Vui Nhộn
+
+            {/* Middle Content */}
+            <div className="relative z-10 my-6 sm:my-8 text-white space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight font-nunito leading-tight">
+                Học Tiếng Việt<br />
+                <span className="text-amber-300 drop-shadow-sm">Thật Vui Nhộn &amp;</span><br />
+                Chuẩn Âm 3 Miền
               </h2>
-              <p className="text-white/80 font-bold text-xs mt-2 leading-relaxed opacity-70">
-                Chinh phục mọi phương ngữ cùng SpeakVN
+              <p className="text-white/85 text-xs sm:text-sm font-semibold leading-relaxed max-w-md">
+                Chinh phục ngữ điệu và phát âm chuẩn từng vùng miền với trợ lý AI phân tích giọng nói thông minh.
+              </p>
+
+              {/* Feature Chips */}
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center gap-2.5 text-xs font-bold text-white/90 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <span className="text-base">🎙️</span>
+                  <span>Nhận diện và sửa ngọng từng phụ âm n/l, tr/ch, d/gi/r</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs font-bold text-white/90 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <span className="text-base">🗺️</span>
+                  <span>Hành trình học tập phân nhánh Miền Bắc, Miền Trung, Miền Nam</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs font-bold text-white/90 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <span className="text-base">🎮</span>
+                  <span>Mini-game câu đố ngữ nghĩa &amp; đấu trường đua sao</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Social Proof */}
+            <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=MinhAnh" alt="User 1" className="w-7 h-7 rounded-full border-2 border-slate-900 bg-sky-200" />
+                  <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=BaoLong" alt="User 2" className="w-7 h-7 rounded-full border-2 border-slate-900 bg-emerald-200" />
+                  <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ThanhTruc" alt="User 3" className="w-7 h-7 rounded-full border-2 border-slate-900 bg-amber-200" />
+                </div>
+                <span className="text-[11px] font-bold text-white/90">12.000+ học viên tin dùng</span>
+              </div>
+              <span className="text-amber-300 font-black text-xs">⭐ 4.9/5</span>
+            </div>
+          </div>
+
+          {/* ==================== RIGHT SIDE - LOGIN FORM ==================== */}
+          <div className="w-full lg:w-7/12 p-6 sm:p-8 lg:p-10 bg-white flex flex-col justify-center">
+
+            {/* Header Greeting */}
+            <div className="mb-5">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-8 h-8 rounded-xl bg-[#49B6E5] border-[2px] border-slate-900 shadow-[2px_2px_0_#1f2937] flex items-center justify-center">
+                  <User size={16} className="text-white" strokeWidth={3} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-[#0284c7]">Chào mừng bạn trở lại!</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tight font-nunito">
+                Đăng Nhập Tài Khoản
+              </h1>
+              <p className="text-slate-500 text-xs font-bold mt-1">
+                Nhập thông tin bên dưới hoặc nhấn vào một trong 3 vai trò mẫu để trải nghiệm nhanh.
               </p>
             </div>
-          </div>
 
-          {/* Doodle Accent */}
-          <div className="absolute top-8 right-8 text-white/30">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="currentColor">
-              <path d="M10,10 L20,10 L20,20 L10,20 Z M30,30 L40,30 L40,40 L30,40 Z M50,10 L55,10 L55,15 L50,15 Z" />
-            </svg>
-          </div>
-        </div>
-
-        {/* ==================== RIGHT SIDE - DOODLE FORM ==================== */}
-        <div className="w-full md:w-7/12 flex flex-col justify-center p-6 lg:p-8 bg-white relative">
-
-          {/* Header Section */}
-          <div className="mb-6">
-            <div className="flex items-center gap-2.5 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-[#49B6E5] border-[2px] border-slate-900 shadow-[2px_2px_0_#1f2937] flex items-center justify-center">
-                <User size={20} className="text-white" strokeWidth={3} />
-              </div>
-              <div>
-                <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight font-nunito leading-none">Chào Mừng!</h1>
-                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Đăng nhập để vào hệ thống</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Login 3 Roles */}
-          <div className="mb-4 p-2.5 bg-amber-50/80 border-[2px] border-slate-900 rounded-2xl shadow-[3px_3px_0_#1f2937]">
-            <div className="flex items-center justify-between mb-2 px-1">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <Zap size={13} className="text-amber-500 fill-amber-500" />
-                Đăng nhập nhanh 3 vai trò:
-              </span>
-              <span className="text-[9px] font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-md border border-slate-300">
-                Mật khẩu: Pen1112003@
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleQuickSelect('admin@fsa.com', 'Admin')}
-                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
-                  selectedRole === 'Admin'
-                    ? 'bg-rose-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
-                    : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
-                }`}
-              >
-                <span className="text-xs font-black">🛡️ Quản trị viên</span>
-                <span className="text-[8px] opacity-75 truncate max-w-full">admin@fsa.com</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickSelect('educator@fsa.com', 'Educator')}
-                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
-                  selectedRole === 'Educator'
-                    ? 'bg-purple-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
-                    : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
-                }`}
-              >
-                <span className="text-xs font-black">🎓 Giảng viên</span>
-                <span className="text-[8px] opacity-75 truncate max-w-full">educator@fsa.com</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickSelect('student@fsa.com', 'Student')}
-                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
-                  selectedRole === 'Student'
-                    ? 'bg-sky-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
-                    : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
-                }`}
-              >
-                <span className="text-xs font-black">🎒 Học viên</span>
-                <span className="text-[8px] opacity-75 truncate max-w-full">student@fsa.com</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Form */}
-          <Form
-            form={form}
-            name="login"
-            layout="vertical"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            autoComplete="off"
-            size="large"
-            className="doodle-form"
-          >
-            <Form.Item
-              name="email"
-              rules={[
-                { required: true, message: 'Vui lòng nhập email!' },
-                { type: 'email', message: 'Vui lòng nhập email hợp lệ!' }
-              ]}
-              className="mb-3"
-            >
-              <Input
-                prefix={<Mail size={18} className="text-slate-400 mr-1.5" strokeWidth={2.5} />}
-                placeholder="Địa chỉ Email"
-                className="h-12 rounded-xl border-[2px] border-slate-900 bg-slate-50 font-black text-xs shadow-[2px_2px_0_#1f2937] focus:bg-white transition-all"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={passwordRules}
-              className="mb-3"
-            >
-              <Input.Password
-                prefix={<Lock size={18} className="text-slate-400 mr-1.5" strokeWidth={2.5} />}
-                placeholder="Mật khẩu"
-                className="h-12 rounded-xl border-[2px] border-slate-900 bg-slate-50 font-black text-xs shadow-[2px_2px_0_#1f2937] focus:bg-white transition-all"
-              />
-            </Form.Item>
-
-            <div className="flex justify-between items-center mb-5">
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox className="text-slate-900 text-[10px] font-black uppercase tracking-widest doodle-checkbox">Ghi nhớ</Checkbox>
-              </Form.Item>
-              <Link
-                to="/forgot-password"
-                className="text-orange-500 hover:text-orange-600 font-black text-[10px] uppercase tracking-widest transition-colors"
-              >
-                Quên mật khẩu?
-              </Link>
-            </div>
-
-            <Form.Item className="mb-4">
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                className="h-12 rounded-xl bg-[#49B6E5] text-white border-[2.5px] border-slate-900 shadow-[4px_4px_0_#1f2937] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none"
-              >
-                Đăng Nhập <ArrowRight size={16} strokeWidth={3} />
-              </Button>
-            </Form.Item>
-
-            {/* Divider */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t-[1.5px] border-slate-100" />
-              </div>
-              <div className="relative flex justify-center text-[9px] uppercase tracking-[0.22em] px-2">
-                <span className="bg-white px-3 text-slate-300 font-black">HOẶC ĐĂNG NHẬP VỚI</span>
-              </div>
-            </div>
-
-            {/* Social Buttons */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <button
-                type="button"
-                onClick={handleGoogleLogin}
-                disabled={googleLoading}
-                className="flex items-center justify-center h-10 rounded-xl border-[2px] border-slate-900 bg-white shadow-[3px_3px_0_#1f2937] hover:bg-slate-50 transition-all active:translate-y-0.5 active:shadow-none disabled:opacity-50"
-              >
-                {googleLoading ? <DoodleLoading size="small" /> : (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                    </svg>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Google</span>
-                  </div>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleFacebookLogin}
-                disabled={facebookLoading}
-                className="flex items-center justify-center h-10 rounded-xl border-[2px] border-slate-900 bg-white shadow-[3px_3px_0_#1f2937] hover:bg-slate-50 transition-all active:translate-y-0.5 active:shadow-none disabled:opacity-50"
-              >
-                {facebookLoading ? <DoodleLoading size="small" /> : (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1877F2">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Facebook</span>
-                  </div>
-                )}
-              </button>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="text-center pt-2">
-              <Link
-                to="/register"
-                className="inline-flex flex-col items-center group"
-              >
-                <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-0.5 group-hover:text-slate-600 transition-colors">Chưa có tài khoản?</span>
-                <span className="text-[#49B6E5] font-black text-xs uppercase tracking-wider relative">
-                  Đăng Ký Ngay
-                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-[#49B6E5] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+            {/* Quick Login Role Selector */}
+            <div className="mb-5 p-3.5 bg-amber-50/90 border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937]">
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                  <Zap size={14} className="text-amber-500 fill-amber-500" />
+                  Đăng nhập nhanh 3 vai trò:
                 </span>
-              </Link>
-            </div>
-          </Form>
+                <span className="text-[9px] font-black text-slate-600 bg-white px-2 py-0.5 rounded-lg border border-slate-300 shadow-[1px_1px_0_#cbd5e1]">
+                  Mật khẩu: Pen1112003@
+                </span>
+              </div>
 
-          {/* Scoped Styles for Doodle Ant Elements */}
-          <style>{`
-            .doodle-form .ant-input-affix-wrapper {
-              border: 2px solid #1f2937 !important;
-              border-radius: 0.8rem !important;
-              padding: 0 12px !important;
-              box-shadow: 2px 2px 0 #1f2937 !important;
-              transition: all 0.2s ease !important;
-              background-color: #f8fafc !important;
-            }
-            .doodle-form .ant-input-affix-wrapper:hover {
-              box-shadow: 4px 4px 0 #1f2937 !important;
-              transform: translate(-1px, -1px);
-            }
-            .doodle-form .ant-input-affix-wrapper-focused {
-              box-shadow: 4px 4px 0 #1f2937 !important;
-              border-color: #49B6E5 !important;
-              background-color: white !important;
-            }
-            .doodle-form .ant-form-item-explain-error {
-              font-size: 9px;
-              text-transform: uppercase;
-              font-weight: 900;
-              margin-top: 4px;
-              color: #ef4444;
-            }
-            .doodle-checkbox .ant-checkbox-inner {
-              border: 2px solid #1f2937 !important;
-              border-radius: 5px !important;
-              width: 16px !important;
-              height: 16px !important;
-            }
-            .doodle-checkbox .ant-checkbox-checked .ant-checkbox-inner {
-              background-color: #49B6E5 !important;
-              border-color: #1f2937 !important;
-            }
-          `}</style>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleQuickSelect('admin@fsa.com', 'Admin')}
+                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                    selectedRole === 'Admin'
+                      ? 'bg-rose-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
+                      : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-sm">🛡️</span>
+                    {selectedRole === 'Admin' && <CheckCircle2 size={12} className="text-white" />}
+                  </div>
+                  <div className="mt-1">
+                    <div className="text-xs font-black leading-tight">Quản trị viên</div>
+                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Admin' ? 'text-white/80' : 'text-slate-500'}`}>admin@fsa.com</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickSelect('educator@fsa.com', 'Educator')}
+                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                    selectedRole === 'Educator'
+                      ? 'bg-purple-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
+                      : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-sm">🎓</span>
+                    {selectedRole === 'Educator' && <CheckCircle2 size={12} className="text-white" />}
+                  </div>
+                  <div className="mt-1">
+                    <div className="text-xs font-black leading-tight">Giảng viên</div>
+                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Educator' ? 'text-white/80' : 'text-slate-500'}`}>educator@fsa.com</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuickSelect('student@fsa.com', 'Student')}
+                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                    selectedRole === 'Student'
+                      ? 'bg-sky-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
+                      : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-sm">🎒</span>
+                    {selectedRole === 'Student' && <CheckCircle2 size={12} className="text-white" />}
+                  </div>
+                  <div className="mt-1">
+                    <div className="text-xs font-black leading-tight">Học viên</div>
+                    <div className={`text-[9px] truncate mt-0.5 ${selectedRole === 'Student' ? 'text-white/80' : 'text-slate-500'}`}>student@fsa.com</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Form */}
+            <Form
+              form={form}
+              name="login"
+              layout="vertical"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              autoComplete="off"
+              size="large"
+              className="doodle-form"
+            >
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập email!' },
+                  { type: 'email', message: 'Vui lòng nhập email hợp lệ!' }
+                ]}
+                className="mb-3.5"
+              >
+                <Input
+                  prefix={<Mail size={18} className="text-slate-400 mr-2" strokeWidth={2.5} />}
+                  placeholder="Địa chỉ Email (ví dụ: student@fsa.com)"
+                  className="h-12 rounded-2xl border-[2.5px] border-slate-900 bg-slate-50 font-black text-xs shadow-[3px_3px_0_#1f2937] focus:bg-white transition-all"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                rules={passwordRules}
+                className="mb-3"
+              >
+                <Input.Password
+                  prefix={<Lock size={18} className="text-slate-400 mr-2" strokeWidth={2.5} />}
+                  placeholder="Mật khẩu"
+                  className="h-12 rounded-2xl border-[2.5px] border-slate-900 bg-slate-50 font-black text-xs shadow-[3px_3px_0_#1f2937] focus:bg-white transition-all"
+                />
+              </Form.Item>
+
+              <div className="flex justify-between items-center mb-4">
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox className="text-slate-900 text-xs font-black doodle-checkbox">
+                    Ghi nhớ đăng nhập
+                  </Checkbox>
+                </Form.Item>
+                <Link
+                  to="/forgot-password"
+                  className="text-orange-500 hover:text-orange-600 font-black text-xs transition-colors hover:underline"
+                >
+                  Quên mật khẩu?
+                </Link>
+              </div>
+
+              <Form.Item className="mb-4">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  className="h-12 rounded-2xl bg-[#49B6E5] hover:bg-[#38a5d4] text-white border-[2.5px] border-slate-900 shadow-[4px_4px_0_#1f2937] font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none"
+                >
+                  <span>Đăng Nhập Ngay</span>
+                  <ArrowRight size={18} strokeWidth={3} />
+                </Button>
+              </Form.Item>
+
+              {/* Divider */}
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t-[2px] border-slate-200" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase tracking-widest px-2">
+                  <span className="bg-white px-3 text-slate-400 font-black">HOẶC TIẾP TỤC VỚI</span>
+                </div>
+              </div>
+
+              {/* Social Login Buttons */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={googleLoading}
+                  className="flex items-center justify-center gap-2 h-11 rounded-2xl border-[2px] border-slate-900 bg-white shadow-[3px_3px_0_#1f2937] hover:bg-slate-50 transition-all active:translate-y-0.5 active:shadow-none disabled:opacity-50"
+                >
+                  {googleLoading ? <DoodleLoading size="small" /> : (
+                    <>
+                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                      </svg>
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-900">Google</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleFacebookLogin}
+                  disabled={facebookLoading}
+                  className="flex items-center justify-center gap-2 h-11 rounded-2xl border-[2px] border-slate-900 bg-white shadow-[3px_3px_0_#1f2937] hover:bg-slate-50 transition-all active:translate-y-0.5 active:shadow-none disabled:opacity-50"
+                >
+                  {facebookLoading ? <DoodleLoading size="small" /> : (
+                    <>
+                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="#1877F2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-900">Facebook</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Bottom Register Prompt */}
+              <div className="text-center pt-2">
+                <span className="text-slate-500 text-xs font-bold mr-1.5">Chưa có tài khoản?</span>
+                <Link
+                  to="/register"
+                  className="text-[#0284c7] hover:text-[#0369a1] font-black text-xs uppercase tracking-wider hover:underline"
+                >
+                  Đăng Ký Ngay →
+                </Link>
+              </div>
+            </Form>
+
+            {/* Custom Scoped CSS */}
+            <style>{`
+              .doodle-form .ant-input-affix-wrapper {
+                border: 2.5px solid #1f2937 !important;
+                border-radius: 1rem !important;
+                padding: 0 14px !important;
+                box-shadow: 3px 3px 0 #1f2937 !important;
+                transition: all 0.2s ease !important;
+                background-color: #f8fafc !important;
+              }
+              .doodle-form .ant-input-affix-wrapper:hover {
+                box-shadow: 4px 4px 0 #1f2937 !important;
+                transform: translate(-1px, -1px);
+              }
+              .doodle-form .ant-input-affix-wrapper-focused {
+                box-shadow: 4px 4px 0 #1f2937 !important;
+                border-color: #49B6E5 !important;
+                background-color: white !important;
+              }
+              .doodle-form .ant-form-item-explain-error {
+                font-size: 10px;
+                text-transform: uppercase;
+                font-weight: 900;
+                margin-top: 4px;
+                color: #ef4444;
+              }
+              .doodle-checkbox .ant-checkbox-inner {
+                border: 2px solid #1f2937 !important;
+                border-radius: 6px !important;
+                width: 18px !important;
+                height: 18px !important;
+              }
+              .doodle-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+                background-color: #49B6E5 !important;
+                border-color: #1f2937 !important;
+              }
+            `}</style>
+          </div>
+        </motion.div>
+      </main>
+
+      {/* Footer Info */}
+      <footer className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-slate-500 font-bold text-[11px] z-20 mt-4 pt-4 border-t border-slate-300/60">
+        <div>© 2026 SpeakVN. Nền tảng luyện phát âm tiếng Việt đa vùng miền.</div>
+        <div className="flex items-center gap-4 mt-2 sm:mt-0">
+          <span>Bảo mật</span>
+          <span>•</span>
+          <span>Điều khoản</span>
+          <span>•</span>
+          <span>Hỗ trợ: support@speakvn.edu.vn</span>
         </div>
-      </motion.div>
-    </div >
+      </footer>
+    </div>
   )
 }
 

@@ -324,8 +324,10 @@ public class AuthService {
      * Generate DiceBear avatar URL from name
      */
     private String generateDefaultAvatar(String fullName) {
-        String seed = fullName != null ? fullName.replaceAll("\\s+", "+") : "default";
-        return "https://api.dicebear.com/7.x/initials/svg?seed=" + seed;
+        String seed = (fullName != null && !fullName.trim().isEmpty())
+                ? java.net.URLEncoder.encode(fullName.trim(), java.nio.charset.StandardCharsets.UTF_8)
+                : "HocVienSpeakVN";
+        return "https://api.dicebear.com/7.x/adventurer/svg?seed=" + seed;
     }
 
     /**

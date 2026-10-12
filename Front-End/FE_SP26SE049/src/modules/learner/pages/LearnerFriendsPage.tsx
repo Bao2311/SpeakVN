@@ -7,6 +7,7 @@ import SockJS from 'sockjs-client';
 import { useAuth } from '../../../core/auth/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { getAvatarUrl, getInitials } from '../../../utils/avatar';
 import {
     Users,
     UserPlus,
@@ -154,10 +155,12 @@ const FriendProfileModal = ({
                         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
                             <div className="p-1 bg-white rounded-3xl border-[2.5px] border-slate-900 shadow-[4px_4px_0_#1f2937]">
                                 <Avatar
-                                    src={profile.avatar_url || profile.avatarUrl}
+                                    src={getAvatarUrl(profile.avatar_url || profile.avatarUrl, profile.fullName)}
                                     size={90}
-                                    className="bg-sky-100 rounded-[1.4rem]"
-                                />
+                                    className="bg-sky-100 rounded-[1.4rem] font-black text-2xl text-slate-800"
+                                >
+                                    {getInitials(profile.fullName)}
+                                </Avatar>
                             </div>
                         </div>
                     </div>
@@ -245,10 +248,12 @@ const FriendCard = ({
             <div className="relative flex-shrink-0">
                 <div className="p-0.5 bg-white rounded-2xl border-[2px] border-slate-900 shadow-[3px_3px_0_#1f2937]">
                     <Avatar
-                        src={item.avatar_url || item.avatarUrl}
+                        src={getAvatarUrl(item.avatar_url || item.avatarUrl, item.fullName)}
                         size={64}
-                        className="bg-sky-50 rounded-[0.9rem]"
-                    />
+                        className="bg-sky-50 rounded-[0.9rem] font-black text-lg text-slate-800"
+                    >
+                        {getInitials(item.fullName)}
+                    </Avatar>
                 </div>
                 {unreadCount != null && unreadCount > 0 && (
                     <div className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black min-w-[1.6rem] h-7 px-1 flex items-center justify-center rounded-full border-[2.5px] border-slate-900 z-10 shadow-[2px_2px_0_#1f2937] animate-bounce">
@@ -364,10 +369,12 @@ const RequestCard = ({
     >
         <div className="p-0.5 bg-white rounded-xl border-[1.5px] border-slate-900 shadow-[2px_2px_0_#1f2937]">
             <Avatar
-                src={item.avatar_url || item.avatarUrl}
+                src={getAvatarUrl(item.avatar_url || item.avatarUrl, item.fullName)}
                 size={48}
-                className="bg-sky-100 rounded-lg flex-shrink-0"
-            />
+                className="bg-sky-100 rounded-lg flex-shrink-0 font-black text-sm text-slate-800"
+            >
+                {getInitials(item.fullName)}
+            </Avatar>
         </div>
         <div className="flex-1 min-w-0">
             <div className="font-black text-slate-900 text-sm truncate uppercase tracking-tight font-nunito">{item.fullName || 'Người dùng'}</div>
@@ -446,10 +453,12 @@ const SearchCard = ({ item, onSend }: { item: SearchUser; onSend: (id: string) =
         >
             <div className="p-0.5 bg-white rounded-xl border-[1.5px] border-slate-900 shadow-[2px_2px_0_#1f2937]">
                 <Avatar
-                    src={item.avatar_url || item.avatarUrl}
+                    src={getAvatarUrl(item.avatar_url || item.avatarUrl, item.fullName)}
                     size={52}
-                    className="bg-sky-50 rounded-lg flex-shrink-0"
-                />
+                    className="bg-sky-50 rounded-lg flex-shrink-0 font-black text-base text-slate-800"
+                >
+                    {getInitials(item.fullName)}
+                </Avatar>
             </div>
             <div className="flex-1 min-w-0">
                 <div className="font-black text-slate-900 text-sm truncate uppercase tracking-tight font-nunito">{item.fullName || 'Người dùng'}</div>
