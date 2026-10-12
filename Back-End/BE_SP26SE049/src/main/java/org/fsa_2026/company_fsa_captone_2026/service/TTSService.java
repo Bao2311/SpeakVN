@@ -7,14 +7,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TTSService {
     private static final String FPT_API_URL = "https://api.fpt.ai/hmi/tts/v5";
-    private static final String FPT_API_KEY = "oZO8MheKtxmn0JAVKiaeURTubrDtOwdp";
+    private static final String DEFAULT_FPT_API_KEY = "oZO8MheKtxmn0JAVKiaeURTubrDtOwdp";
+
+    private final SystemConfigService systemConfigService;
+
+    @Value("${fpt.api-key:}")
+    private String configuredFptApiKey;
 
     // In-memory cache to save API quota and make repeated words instant
     private final Map<String, Map<String, Object>> cache = new java.util.concurrent.ConcurrentHashMap<>();
@@ -33,14 +41,17 @@ public class TTSService {
             return cache.get(cacheKey);
         }
 
+        String activeKey = systemConfigService.getValue("fpt.api-key", 
+                (configuredFptApiKey != null && !configuredFptApiKey.isBlank()) ? configuredFptApiKey : DEFAULT_FPT_API_KEY);
+
         try {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters()
                     .add(0, new org.springframework.http.converter.StringHttpMessageConverter(
                             java.nio.charset.StandardCharsets.UTF_8));
             HttpHeaders headers = new HttpHeaders();
-            headers.set("api-key", FPT_API_KEY);
-            headers.set("api_key", FPT_API_KEY);
+            headers.set("api-key", activeKey);
+            headers.set("api_key", activeKey);
             headers.set("Content-Type", "text/plain; charset=utf-8");
             headers.set("voice", safeVoice);
             headers.set("speed", "");

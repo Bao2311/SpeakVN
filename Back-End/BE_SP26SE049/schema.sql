@@ -1756,17 +1756,22 @@ CREATE TABLE IF NOT EXISTS system_config (
 
 INSERT INTO system_config (id, config_key, config_value, description, created_by, updated_by)
             VALUES 
-                ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f602', 'groq.model', 'llama-3.3-70b-versatile', 'Model AI chính dùng cho Groq', 'SYSTEM', 'SYSTEM')
+                ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f602', 'groq.model', 'openai/gpt-oss-120b', 'Model AI chính dùng cho Groq', 'SYSTEM', 'SYSTEM')
             ON CONFLICT (config_key) DO NOTHING;
 
 INSERT INTO system_config (id, config_key, config_value, description, created_by, updated_by)
             VALUES 
-                ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f603', 'groq.fallback-models', 'llama-3.3-70b-versatile,llama-3.1-8b-instant', 'Các model fallback dự phòng cho Groq', 'SYSTEM', 'SYSTEM')
+                ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f603', 'groq.fallback-models', 'openai/gpt-oss-20b,qwen/qwen3.8-27b', 'Các model fallback dự phòng cho Groq', 'SYSTEM', 'SYSTEM')
             ON CONFLICT (config_key) DO NOTHING;
 
 INSERT INTO system_config (id, config_key, config_value, description, created_by, updated_by)
             VALUES 
                 ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f604', 'groq.endpoint', 'https://api.groq.com/openai/v1/chat/completions', 'Endpoint API của Groq', 'SYSTEM', 'SYSTEM')
+            ON CONFLICT (config_key) DO NOTHING;
+
+INSERT INTO system_config (id, config_key, config_value, description, created_by, updated_by)
+            VALUES 
+                ('8f5a6b0c-7b0a-41f2-9de9-52e6d622f606', 'fpt.api-key', 'oZO8MheKtxmn0JAVKiaeURTubrDtOwdp', 'API Key cho FPT.AI Voice TTS v5', 'SYSTEM', 'SYSTEM')
             ON CONFLICT (config_key) DO NOTHING;
 
 -- Seed Prompt system instruction
