@@ -44,6 +44,7 @@ public class EmailService {
         String subject = "SpeakVN - Xác nhận địa chỉ email";
         String verifyLink = baseUrl + "/verify-email?email=" + toEmail + "&code=" + otpCode;
         String supportLink = baseUrl + "/support";
+        log.info("🔑 [XÁC THỰC EMAIL] Mã OTP gửi tới {}: {} | Link xác thực: {}", toEmail, otpCode, verifyLink);
         String content = buildEmailVerificationHtml(fullName, verifyLink, supportLink, otpCode);
         sendHtmlEmail(toEmail, subject, content);
     }
@@ -56,6 +57,7 @@ public class EmailService {
         String subject = "SpeakVN - Khôi phục mật khẩu";
         String resetLink = baseUrl + "/reset-password?email=" + toEmail + "&code=" + resetCode;
         String supportLink = baseUrl + "/support";
+        log.info("🔑 [ĐẶT LẠI MẬT KHẨU] Mã OTP gửi tới {}: {} | Link: {}", toEmail, resetCode, resetLink);
         String content = buildResetPasswordHtml(fullName, resetCode, resetLink, supportLink);
         sendHtmlEmail(toEmail, subject, content);
     }
