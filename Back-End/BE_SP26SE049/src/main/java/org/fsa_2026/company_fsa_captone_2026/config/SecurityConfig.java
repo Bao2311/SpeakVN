@@ -25,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,7 +55,13 @@ public class SecurityConfig {
     @Primary
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+
+        // Sử dụng AllowedOriginPatterns thay vì AllowedOrigins để hỗ trợ "*" cùng allowCredentials(true)
+        configuration.setAllowedOriginPatterns(origins.isEmpty() ? List.of("*") : origins);
         configuration.setAllowedMethods(List.of(allowedMethods.split(",")));
         configuration.setAllowedHeaders(List.of(allowedHeaders.split(",")));
         configuration.setExposedHeaders(List.of("Content-Disposition", "Content-Type", "Content-Length"));
