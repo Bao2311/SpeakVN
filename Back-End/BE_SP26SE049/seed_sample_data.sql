@@ -19,7 +19,7 @@ INSERT INTO account (
 ) VALUES (
     '00000000-0000-0000-0002-000000000009',
     'admin@fsa.com',
-    '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
+    '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG',
     'ADMIN',
     'Quản trị viên',
     'https://api.dicebear.com/7.x/bottts/svg?seed=AdminFSA',
@@ -40,7 +40,7 @@ INSERT INTO account (
 ) VALUES (
     '00000000-0000-0000-0002-000000000001',
     'educator@fsa.com',
-    '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
+    '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG',
     'EDUCATOR',
     'Giảng viên',
     'https://api.dicebear.com/7.x/bottts/svg?seed=EducatorFSA',
@@ -62,7 +62,7 @@ INSERT INTO account (
 ) VALUES (
     '00000000-0000-0000-0002-000000000002',
     'student@fsa.com',
-    '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
+    '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG',
     'USER',
     'Học viên 1',
     'https://api.dicebear.com/7.x/adventurer/svg?seed=HocVienDemo',
@@ -89,21 +89,23 @@ INSERT INTO account (
 ) VALUES (
     '00000000-0000-0000-0002-000000000003',
     'tested_student@fsa.com',
-    '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
+    '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG',
     'USER',
     'Học viên 2',
     'https://api.dicebear.com/7.x/adventurer/svg?seed=HocVienNorth',
-    TRUE, TRUE, 'NORTH', TRUE, 21, 450, 5, 7, 3, NOW(), NOW()
+    TRUE, TRUE, 'NORTH', FALSE, 0, 0, 0, 0, 0, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
     role_code = 'USER',
     email_verified = TRUE,
     is_active = TRUE,
     region = 'NORTH',
-    has_done_entry_test = TRUE,
-    total_stars = 21,
-    total_experience = 450,
-    current_streak_days = 5,
+    has_done_entry_test = FALSE,
+    total_stars = 0,
+    total_experience = 0,
+    current_streak_days = 0,
+    max_streak_days = 0,
+    badge_count = 0,
     avatar_url = EXCLUDED.avatar_url,
     full_name = EXCLUDED.full_name;
 
@@ -112,14 +114,14 @@ INSERT INTO account (
     id, email, password_hash, role_code, full_name, avatar_url, email_verified, is_active,
     region, has_done_entry_test, total_stars, total_experience, current_streak_days, max_streak_days, badge_count, created_at, updated_at
 ) VALUES
-('00000000-0000-0000-0002-000000000010', 'minhanh@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Trần Minh Anh', 'https://api.dicebear.com/7.x/adventurer/svg?seed=MinhAnh', TRUE, TRUE, 'NORTH', TRUE, 45, 920, 12, 15, 6, NOW() - INTERVAL '30 days', NOW()),
-('00000000-0000-0000-0002-000000000011', 'baolong@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Lê Bảo Long', 'https://api.dicebear.com/7.x/adventurer/svg?seed=BaoLong', TRUE, TRUE, 'SOUTH', TRUE, 39, 810, 9, 14, 5, NOW() - INTERVAL '25 days', NOW()),
-('00000000-0000-0000-0002-000000000012', 'thanhtruc@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Nguyễn Thanh Trúc', 'https://api.dicebear.com/7.x/adventurer/svg?seed=ThanhTruc', TRUE, TRUE, 'CENTRAL', TRUE, 33, 680, 8, 10, 4, NOW() - INTERVAL '20 days', NOW()),
-('00000000-0000-0000-0002-000000000013', 'hoangnam@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Phạm Hoàng Nam', 'https://api.dicebear.com/7.x/adventurer/svg?seed=HoangNam', TRUE, TRUE, 'NORTH', TRUE, 27, 560, 6, 8, 3, NOW() - INTERVAL '18 days', NOW()),
-('00000000-0000-0000-0002-000000000014', 'khanhvy@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Võ Khánh Vy', 'https://api.dicebear.com/7.x/adventurer/svg?seed=KhanhVy', TRUE, TRUE, 'SOUTH', TRUE, 21, 440, 4, 7, 3, NOW() - INTERVAL '15 days', NOW()),
-('00000000-0000-0000-0002-000000000015', 'quocbao@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Đặng Quốc Bảo', 'https://api.dicebear.com/7.x/adventurer/svg?seed=QuocBao', TRUE, TRUE, 'CENTRAL', TRUE, 18, 380, 3, 5, 2, NOW() - INTERVAL '12 days', NOW()),
-('00000000-0000-0000-0002-000000000016', 'duchuy@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Hoàng Đức Huy', 'https://api.dicebear.com/7.x/adventurer/svg?seed=DucHuy', TRUE, TRUE, 'NORTH', TRUE, 15, 310, 2, 4, 2, NOW() - INTERVAL '10 days', NOW()),
-('00000000-0000-0000-0002-000000000017', 'maichi@fsa.com', '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG', 'USER', 'Bùi Mai Chi', 'https://api.dicebear.com/7.x/adventurer/svg?seed=MaiChi', TRUE, TRUE, 'SOUTH', TRUE, 12, 250, 1, 3, 1, NOW() - INTERVAL '7 days', NOW())
+('00000000-0000-0000-0002-000000000010', 'minhanh@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Trần Minh Anh', 'https://api.dicebear.com/7.x/adventurer/svg?seed=MinhAnh', TRUE, TRUE, 'NORTH', TRUE, 45, 920, 12, 15, 6, NOW() - INTERVAL '30 days', NOW()),
+('00000000-0000-0000-0002-000000000011', 'baolong@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Lê Bảo Long', 'https://api.dicebear.com/7.x/adventurer/svg?seed=BaoLong', TRUE, TRUE, 'SOUTH', TRUE, 39, 810, 9, 14, 5, NOW() - INTERVAL '25 days', NOW()),
+('00000000-0000-0000-0002-000000000012', 'thanhtruc@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Nguyễn Thanh Trúc', 'https://api.dicebear.com/7.x/adventurer/svg?seed=ThanhTruc', TRUE, TRUE, 'CENTRAL', TRUE, 33, 680, 8, 10, 4, NOW() - INTERVAL '20 days', NOW()),
+('00000000-0000-0000-0002-000000000013', 'hoangnam@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Phạm Hoàng Nam', 'https://api.dicebear.com/7.x/adventurer/svg?seed=HoangNam', TRUE, TRUE, 'NORTH', TRUE, 27, 560, 6, 8, 3, NOW() - INTERVAL '18 days', NOW()),
+('00000000-0000-0000-0002-000000000014', 'khanhvy@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Võ Khánh Vy', 'https://api.dicebear.com/7.x/adventurer/svg?seed=KhanhVy', TRUE, TRUE, 'SOUTH', TRUE, 21, 440, 4, 7, 3, NOW() - INTERVAL '15 days', NOW()),
+('00000000-0000-0000-0002-000000000015', 'quocbao@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Đặng Quốc Bảo', 'https://api.dicebear.com/7.x/adventurer/svg?seed=QuocBao', TRUE, TRUE, 'CENTRAL', TRUE, 18, 380, 3, 5, 2, NOW() - INTERVAL '12 days', NOW()),
+('00000000-0000-0000-0002-000000000016', 'duchuy@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Hoàng Đức Huy', 'https://api.dicebear.com/7.x/adventurer/svg?seed=DucHuy', TRUE, TRUE, 'NORTH', TRUE, 15, 310, 2, 4, 2, NOW() - INTERVAL '10 days', NOW()),
+('00000000-0000-0000-0002-000000000017', 'maichi@fsa.com', '$2a$10$p95sHy2inkatNqu.5GWwFe2eDouoPtVMP7QQbkb17Y3.BiHA//1gG', 'USER', 'Bùi Mai Chi', 'https://api.dicebear.com/7.x/adventurer/svg?seed=MaiChi', TRUE, TRUE, 'SOUTH', TRUE, 12, 250, 1, 3, 1, NOW() - INTERVAL '7 days', NOW())
 ON CONFLICT (email) DO UPDATE SET
     full_name = EXCLUDED.full_name,
     avatar_url = EXCLUDED.avatar_url,

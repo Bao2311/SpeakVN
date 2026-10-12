@@ -1294,9 +1294,17 @@ const QuizPage: React.FC = () => {
       case 'MULTIPLE_CHOICE': {
         const handleSelect = (opt: string) => {
           if (answered) return
-          if ((ch.audioUrl || ch.transcript) && (audioPlays[idx] || 0) === 0) {
-            message.warning('Bạn cần nghe âm thanh trước khi chọn đáp án!')
-            return
+          // If listening question and hasn't played audio yet, trigger audio in background and mark played
+          if (ch.skillType === 'LISTENING' && (audioPlays[idx] || 0) === 0) {
+            setAudioPlays(prev => ({ ...prev, [idx]: 1 }))
+            const ttsVoice = (ch.region === 'TRUNG' || ch.region === 'CENTRAL') ? 'myan'
+              : (ch.region === 'NAM' || ch.region === 'SOUTH') ? 'linhsan'
+              : 'banmai'
+            playVietnameseAudio({
+              text: ch.transcript || ch.content,
+              voice: ttsVoice,
+              audioUrl: ch.audioUrl
+            }).catch(() => {})
           }
           setSelected(opt); setAnswered(true)
           const isCorrect = opt === ch.correctAnswer
@@ -1310,14 +1318,10 @@ const QuizPage: React.FC = () => {
         )
       }
 
-      // ═══════════════ FIND WRONG WORD ═══════════════════════════════════════
+      // ═══════════════ FIND WRONG WORD (READING) ═════════════════════════════
       case 'FIND_WRONG_WORD': {
         const handleWordClick = (wordIdx: number) => {
           if (answered) return
-          if ((ch.audioUrl || ch.transcript) && (audioPlays[idx] || 0) === 0) {
-            message.warning('Bạn cần nghe âm thanh trước khi chọn đáp án!')
-            return
-          }
           setWordPicked(wordIdx); setAnswered(true)
           if (wordIdx === ch.errorIndex) setScore(s => s + 1)
         }
@@ -1358,10 +1362,6 @@ const QuizPage: React.FC = () => {
       case 'WRITING_FILL': {
         const handleWritingSubmit = () => {
           if (!writingInput.trim()) return
-          if ((ch.audioUrl || ch.transcript) && (audioPlays[idx] || 0) === 0) {
-            message.warning('Bạn cần nghe âm thanh trước khi trả lời!')
-            return
-          }
           setAnswered(true)
           const isCorrect = ch.correctWords.some(w => w.toLowerCase().replace(/[.,!?;:]/g, '') === writingInput.trim().toLowerCase().replace(/[.,!?;:]/g, ''))
           if (isCorrect) setScore(s => s + 1)
@@ -1862,12 +1862,12 @@ const QuizPage: React.FC = () => {
                             : (ch.region === 'NAM' || ch.region === 'SOUTH') ? 'linhsan'
                             : 'banmai';
                           setPlayingTTS(ttsVoice);
+                          setAudioPlays(prev => ({ ...prev, [idx]: plays + 1 }));
                           await playVietnameseAudio({
                             text: ch.transcript || ch.content,
                             voice: ttsVoice,
                             audioUrl: ch.audioUrl
                           });
-                          setAudioPlays(prev => ({ ...prev, [idx]: plays + 1 }));
                         }
                       } catch (_) { } finally {
                         setPlayingTTS(null);

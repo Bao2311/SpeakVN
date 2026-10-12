@@ -82,9 +82,8 @@ export default function LearnerLayout() {
 
 
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleLogout = async () => {
+    await logout();
   };
 
   const userMenu = {

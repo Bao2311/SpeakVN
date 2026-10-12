@@ -7,6 +7,7 @@ import { Lock, Mail, Home, Sparkles, User, ArrowRight, Zap, CheckCircle2, Shield
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
 import { motion } from 'framer-motion'
 import { DoodleLoading } from '../../components/ui/DoodleLoading'
+import RecruiterNoticeModal from '../../components/common/RecruiterNoticeModal'
 
 const GOOGLE_CLIENT_ID = '1086072031174-fk0iepl3k13dol2u53tjsueo3c3vq70j.apps.googleusercontent.com'
 const FACEBOOK_APP_ID = '1169205748542841'
@@ -25,15 +26,37 @@ function LoginForm() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [facebookLoading, setFacebookLoading] = useState(false)
   const [selectedRole, setSelectedRole] = useState(null)
+  const [showRecruiterModal, setShowRecruiterModal] = useState(false)
 
-  const handleQuickSelect = (email, role) => {
+  // Auto-open modal once per session for recruiters
+  React.useEffect(() => {
+    const hasSeen = sessionStorage.getItem('speakvn_recruiter_notice_seen')
+    if (!hasSeen) {
+      const timer = setTimeout(() => {
+        setShowRecruiterModal(true)
+        sessionStorage.setItem('speakvn_recruiter_notice_seen', 'true')
+      }, 600)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleQuickSelect = (email, role, customPassword = 'User@123') => {
     setSelectedRole(role)
     form.setFieldsValue({
       email,
-      password: 'Pen1112003@',
+      password: customPassword,
       remember: true,
     })
     message.success(`Đã chọn tài khoản ${role}: ${email}`)
+  }
+
+  const handleModalQuickLogin = (email, password) => {
+    form.setFieldsValue({
+      email,
+      password,
+      remember: true,
+    })
+    onFinish({ email, password, remember: true })
   }
 
   const navigateByRole = useCallback((session) => {
@@ -227,14 +250,31 @@ function LoginForm() {
           <span>Về Trang Chủ</span>
         </Link>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-white border-[2px] border-slate-900 rounded-full shadow-[2px_2px_0_#1f2937]">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Clickable System Status Pill */}
+          <button
+            type="button"
+            onClick={() => setShowRecruiterModal(true)}
+            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-white hover:bg-emerald-50 border-[2px] border-slate-900 rounded-full shadow-[2px_2px_0_#1f2937] transition-all cursor-pointer active:translate-y-0.5"
+            title="Bấm để xem chi tiết trạng thái máy chủ"
+          >
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[11px] font-black text-slate-800">Hệ thống hoạt động bình thường</span>
-          </div>
+          </button>
+
+          {/* Dedicated Recruiter Note Button */}
+          <button
+            type="button"
+            onClick={() => setShowRecruiterModal(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-200 hover:bg-amber-300 border-[2.5px] border-slate-900 rounded-2xl shadow-[3px_3px_0_#1f2937] text-slate-900 font-black text-xs uppercase tracking-wider transition-all active:translate-y-0.5 active:shadow-none"
+          >
+            <Sparkles size={14} className="text-amber-700" />
+            <span>⚡ Lưu Ý Nhà Tuyển Dụng</span>
+          </button>
+
           <Link
             to="/register"
-            className="flex items-center gap-1.5 px-4 py-2 bg-amber-300 border-[2.5px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937] text-slate-900 hover:bg-amber-400 transition-all font-black text-xs uppercase tracking-wider active:translate-y-0.5 active:shadow-none"
+            className="flex items-center gap-1.5 px-4 py-2 bg-sky-300 border-[2.5px] border-slate-900 rounded-2xl shadow-[3px_3px_0_#1f2937] text-slate-900 hover:bg-sky-400 transition-all font-black text-xs uppercase tracking-wider active:translate-y-0.5 active:shadow-none"
           >
             <span>Đăng Ký</span>
             <ArrowRight size={14} strokeWidth={3} />
@@ -335,90 +375,81 @@ function LoginForm() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2.5">
                 <span className="text-[11px] font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
                   <Zap size={14} className="text-amber-500 fill-amber-500" />
-                  Đăng nhập nhanh 4 tài khoản demo:
+                  Đăng nhập nhanh 2 tài khoản test:
                 </span>
-                <span className="text-[9px] font-black text-slate-600 bg-white px-2 py-0.5 rounded-lg border border-slate-300 shadow-[1px_1px_0_#cbd5e1] self-start sm:self-auto">
-                  Mật khẩu: Pen1112003@
+                <span className="text-[9.5px] font-black text-slate-700 bg-white px-2.5 py-0.5 rounded-lg border border-slate-300 shadow-[1px_1px_0_#cbd5e1] self-start sm:self-auto">
+                  Mật khẩu: <span className="text-sky-600 font-black">User@123</span>
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickSelect('admin@fsa.com', 'Quản trị viên')}
-                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
-                    selectedRole === 'Quản trị viên'
-                      ? 'bg-rose-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
-                      : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
-                  }`}
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="text-sm">🛡️</span>
-                    {selectedRole === 'Quản trị viên' && <CheckCircle2 size={12} className="text-white" />}
-                  </div>
-                  <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Quản trị</div>
-                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Quản trị viên' ? 'text-white/80' : 'text-slate-500'}`}>admin@fsa.com</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleQuickSelect('educator@fsa.com', 'Giảng viên')}
-                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
-                    selectedRole === 'Giảng viên'
-                      ? 'bg-purple-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
-                      : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
-                  }`}
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="text-sm">🎓</span>
-                    {selectedRole === 'Giảng viên' && <CheckCircle2 size={12} className="text-white" />}
-                  </div>
-                  <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Giảng viên</div>
-                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Giảng viên' ? 'text-white/80' : 'text-slate-500'}`}>educator@fsa.com</div>
-                  </div>
-                </button>
-
+              {/* Only 2 student accounts displayed (Admin & Educator hidden for security) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={() => handleQuickSelect('student@fsa.com', 'Học viên 1')}
-                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                  className={`p-3 rounded-2xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
                     selectedRole === 'Học viên 1'
                       ? 'bg-sky-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
                       : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-sm">🎒</span>
-                    {selectedRole === 'Học viên 1' && <CheckCircle2 size={12} className="text-white" />}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base">🎒</span>
+                      <span className="text-xs font-black uppercase tracking-tight">Học viên 1</span>
+                    </div>
+                    <span className={`text-[8.5px] font-black px-1.5 py-0.5 rounded-md border ${
+                      selectedRole === 'Học viên 1' ? 'bg-white/20 border-white text-white' : 'bg-emerald-100 border-emerald-300 text-emerald-800'
+                    }`}>
+                      Full 100% Màn &amp; Sao
+                    </span>
                   </div>
-                  <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Học viên 1</div>
-                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Học viên 1' ? 'text-white/80' : 'text-slate-500'}`}>student@fsa.com</div>
+                  <div className="mt-2 pt-1 border-t border-slate-200/60">
+                    <div className={`text-[10px] font-extrabold ${selectedRole === 'Học viên 1' ? 'text-white' : 'text-slate-800'}`}>student@fsa.com</div>
+                    <div className={`text-[9px] mt-0.5 ${selectedRole === 'Học viên 1' ? 'text-white/85' : 'text-slate-500'}`}>
+                      Đã mở khóa toàn bộ màn &amp; huy hiệu để review nhanh.
+                    </div>
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleQuickSelect('tested_student@fsa.com', 'Học viên 2')}
-                  className={`p-2 rounded-xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
+                  className={`p-3 rounded-2xl border-[2px] border-slate-900 text-left transition-all relative flex flex-col justify-between active:translate-y-0.5 ${
                     selectedRole === 'Học viên 2'
-                      ? 'bg-emerald-400 text-white shadow-[3px_3px_0_#1f2937] font-black'
-                      : 'bg-white hover:bg-emerald-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
+                      ? 'bg-amber-400 text-slate-900 shadow-[3px_3px_0_#1f2937] font-black'
+                      : 'bg-white hover:bg-amber-50 text-slate-800 shadow-[2px_2px_0_#1f2937] font-bold'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-sm">🎒</span>
-                    {selectedRole === 'Học viên 2' && <CheckCircle2 size={12} className="text-white" />}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base">✨</span>
+                      <span className="text-xs font-black uppercase tracking-tight">Học viên 2</span>
+                    </div>
+                    <span className={`text-[8.5px] font-black px-1.5 py-0.5 rounded-md border ${
+                      selectedRole === 'Học viên 2' ? 'bg-white/20 border-slate-900 text-slate-900' : 'bg-amber-100 border-amber-300 text-amber-800'
+                    }`}>
+                      Tài Khoản Mới Tinh
+                    </span>
                   </div>
-                  <div className="mt-1">
-                    <div className="text-xs font-black leading-tight">Học viên 2</div>
-                    <div className={`text-[8.5px] truncate mt-0.5 ${selectedRole === 'Học viên 2' ? 'text-white/80' : 'text-slate-500'}`}>tested_student...</div>
+                  <div className="mt-2 pt-1 border-t border-slate-200/60">
+                    <div className={`text-[10px] font-extrabold ${selectedRole === 'Học viên 2' ? 'text-slate-900' : 'text-slate-800'}`}>tested_student@fsa.com</div>
+                    <div className={`text-[9px] mt-0.5 ${selectedRole === 'Học viên 2' ? 'text-slate-900/85' : 'text-slate-500'}`}>
+                      Lộ trình trống để trải nghiệm từ đầu (Entry Test).
+                    </div>
                   </div>
                 </button>
               </div>
+
+              {/* Clickable Note for Recruiters */}
+              <button
+                type="button"
+                onClick={() => setShowRecruiterModal(true)}
+                className="w-full mt-2.5 py-1.5 px-2 bg-white/80 hover:bg-white border border-slate-300 rounded-xl text-[10px] font-black text-slate-700 hover:text-slate-900 flex items-center justify-center gap-1 transition-all"
+              >
+                <Sparkles size={11} className="text-amber-500" />
+                <span>Bấm vào đây để xem Lưu Ý Nhà Tuyển Dụng (Cold-start &amp; AI 3 tầng)</span>
+              </button>
             </div>
 
             {/* Form */}
@@ -597,6 +628,13 @@ function LoginForm() {
           <span>Hỗ trợ: support@speakvn.edu.vn</span>
         </div>
       </footer>
+
+      {/* Recruiter Notice Modal */}
+      <RecruiterNoticeModal
+        isOpen={showRecruiterModal}
+        onClose={() => setShowRecruiterModal(false)}
+        onQuickLogin={handleModalQuickLogin}
+      />
     </div>
   )
 }

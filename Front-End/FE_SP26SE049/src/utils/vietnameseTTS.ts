@@ -52,6 +52,8 @@ export const speakNativeVietnamese = (text: string, voiceType?: string): Promise
         resolve(false);
       };
 
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
       window.speechSynthesis.speak(utterance);
     } catch (err) {
       console.warn('[WebSpeech] exception:', err);

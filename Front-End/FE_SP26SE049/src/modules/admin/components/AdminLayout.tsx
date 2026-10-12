@@ -47,9 +47,8 @@ const AdminLayout = () => {
   const [showUserMenu, setShowUserMenu] = useState(false)
 
   const user = session?.user as any
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
+  const handleLogout = async () => {
+    await logout()
   }
 
   const selectedKey = [...NAV_ITEMS]

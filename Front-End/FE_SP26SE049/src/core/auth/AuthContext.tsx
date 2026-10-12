@@ -171,22 +171,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return fullSession
       },
       logout: async () => {
+        let token: string | null = null
         try {
           const raw = window.sessionStorage.getItem(SESSION_KEY) || window.localStorage.getItem(SESSION_KEY)
           if (raw) {
             const sessionData = JSON.parse(raw) as AuthSession
-            const token = sessionData.refreshToken || window.sessionStorage.getItem(REFRESH_TOKEN_KEY)
-            if (token) {
-              await logoutAPI(token)
-            }
+            token = sessionData.refreshToken || window.sessionStorage.getItem(REFRESH_TOKEN_KEY) || window.localStorage.getItem(REFRESH_TOKEN_KEY)
           }
-        } catch (error) {
-          console.error('Logout API error:', error)
-        } finally {
-          setSession(null)
-          writeSessionToStorage(null, false)
-          window.location.href = '/login'
+        } catch (e) {
+          console.warn('Error reading token before logout:', e)
         }
+
+        // 1. Wipe local state & storages synchronously first so any route guard immediately sees logged-out state
+        setSession(null)
+        writeSessionToStorage(null, false)
+        window.sessionStorage.clear()
+        window.localStorage.removeItem(SESSION_KEY)
+        window.localStorage.removeItem(ACCESS_TOKEN_KEY)
+        window.localStorage.removeItem(REFRESH_TOKEN_KEY)
+        window.localStorage.removeItem(USER_INFO_KEY)
+
+        // 2. Notify backend to revoke refresh token (best-effort)
+        if (token) {
+          try {
+            await logoutAPI(token)
+          } catch (error) {
+            console.error('Logout API error:', error)
+          }
+        }
+
+        // 3. Clean redirect to login page
+        window.location.href = '/login'
       },
       updateSessionItem: (data: Partial<AuthUser>) => {
         if (session) {

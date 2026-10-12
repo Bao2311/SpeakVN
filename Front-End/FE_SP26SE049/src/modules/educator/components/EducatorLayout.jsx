@@ -31,9 +31,8 @@ const EducatorLayout = () => {
     return user.avatar_url || user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.fullName || 'Educator'}`;
   };
 
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
+  const handleLogout = async () => {
+    await logout()
   }
 
   const selectedKey = [...NAV_ITEMS]
