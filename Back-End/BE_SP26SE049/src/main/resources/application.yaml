@@ -22,7 +22,7 @@ spring:
           time_zone: UTC  # ISO 8601 compliance
 
   datasource:
-    url: jdbc:postgresql://${PGHOST:speak-journeyvn123.postgres.database.azure.com}:${PGPORT:5432}/${PGDATABASE:postgres}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${PGHOST:speak-journeyvn123.postgres.database.azure.com}:${PGPORT:5432}/${PGDATABASE:postgres}${PGSSL:}}
     username: ${PGUSER:postgres}
     password: ${PGPASSWORD:Pen1112003@}
     driver-class-name: org.postgresql.Driver
@@ -74,7 +74,7 @@ mail:
   base-url: ${MAIL_BASE_URL:http://localhost:5173}
 
 server:
-  port: 8082
+  port: ${PORT:8082}
   shutdown: GRACEFUL
 
 # JWT Configuration
