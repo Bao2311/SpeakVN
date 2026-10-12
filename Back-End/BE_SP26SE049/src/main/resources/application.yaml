@@ -54,7 +54,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME:nguyenductuan11012003@gmail.com}
+    username: ${MAIL_USERNAME:admin@fsa.com}
     password: ${MAIL_PASSWORD:hofgtxuvvkiaqqgr}
     properties:
       mail:
@@ -70,7 +70,7 @@ spring:
 
 # Mail App Configuration
 mail:
-  from: ${MAIL_FROM:nguyenductuan11012003@gmail.com}
+  from: ${MAIL_FROM:admin@fsa.com}
   base-url: ${MAIL_BASE_URL:https://speakvn-frontend-379382117476.asia-southeast1.run.app}
 
 server:

@@ -18,7 +18,7 @@ INSERT INTO account (
     'admin@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'ADMIN',
-    'Admin Hệ Thống',
+    'Admin',
     TRUE, TRUE, 'NORTH', TRUE, 100, 1000, 5, 10, 3, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -37,7 +37,7 @@ INSERT INTO account (
     'educator@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'EDUCATOR',
-    'Giáo Viên FSA',
+    'Educator',
     TRUE, TRUE, 'NORTH', TRUE, 150, 1500, 10, 15, 4, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -56,7 +56,7 @@ INSERT INTO account (
     'tested_student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Học Viên FSA (Đã Test)',
+    'Student (Tested)',
     TRUE, TRUE, 'NORTH', TRUE, 220, 1850, 7, 14, 5, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -79,7 +79,7 @@ INSERT INTO account (
     'student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Học Viên FSA',
+    'Student',
     TRUE, TRUE, 'SOUTH', TRUE, 150, 950, 3, 5, 2, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -261,10 +261,19 @@ INSERT INTO educator_feedback (
 ) ON CONFLICT (id) DO NOTHING;
 
 -- 9. ACCOUNT REWARDS (UNLOCKED ACHIEVEMENTS)
-INSERT INTO account_reward (id, account_id, reward_catalog_id, status, progress_value, unlocked_at, created_at, updated_at) VALUES
-('00000000-0000-0011-0001-000000000001', '00000000-0000-0000-0002-000000000003', '922260b3-bb97-4ca8-bb21-65116ae33f1f', 'UNLOCKED', 1, NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days', NOW()),
-('00000000-0000-0011-0001-000000000002', '00000000-0000-0000-0002-000000000003', 'ca7489f9-287f-4fbf-805a-bbb91a1777e2', 'UNLOCKED', 1, NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days', NOW()),
-('00000000-0000-0011-0001-000000000003', '00000000-0000-0000-0002-000000000003', '847c61a7-1f0a-4176-8187-7fc56142cc38', 'UNLOCKED', 1, NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NOW())
+INSERT INTO account_reward (id, account_id, reward_catalog_id, status, progress_value, unlocked_at, created_at, updated_at)
+SELECT '00000000-0000-0011-0001-000000000001', '00000000-0000-0000-0002-000000000003', id, 'UNLOCKED', 1, NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days', NOW()
+FROM reward_catalog WHERE code = 'LEARN_FIRST_STEP' LIMIT 1
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO account_reward (id, account_id, reward_catalog_id, status, progress_value, unlocked_at, created_at, updated_at)
+SELECT '00000000-0000-0011-0001-000000000002', '00000000-0000-0000-0002-000000000003', id, 'UNLOCKED', 1, NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days', NOW()
+FROM reward_catalog WHERE code = 'LEARN_DILIGENT' LIMIT 1
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO account_reward (id, account_id, reward_catalog_id, status, progress_value, unlocked_at, created_at, updated_at)
+SELECT '00000000-0000-0011-0001-000000000003', '00000000-0000-0000-0002-000000000003', id, 'UNLOCKED', 1, NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NOW()
+FROM reward_catalog WHERE code = 'CONQUEROR_NORTH' LIMIT 1
 ON CONFLICT (id) DO NOTHING;
 
 -- 10. DAILY CHALLENGE ATTEMPTS

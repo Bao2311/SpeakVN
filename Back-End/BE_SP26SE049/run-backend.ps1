@@ -4,17 +4,29 @@
 # Profile: local
 # ==============================================================
 
-$JDK_PATH = "C:\Users\Boss\.jdks\openjdk-25.0.2"
-$PG_BIN   = "C:\Program Files\PostgreSQL\18\bin"
+$JDK_PATHS = @(
+    "C:\Users\Admin\.jdks\openjdk-25.0.2",
+    "C:\Users\Boss\.jdks\openjdk-25.0.2"
+)
 
-if (Test-Path $JDK_PATH) {
-    $env:JAVA_HOME = $JDK_PATH
-    $env:Path = "$JDK_PATH\bin;$env:Path"
-    Write-Host "[OK] Using Java at: $JDK_PATH" -ForegroundColor Green
+foreach ($jdk in $JDK_PATHS) {
+    if (Test-Path $jdk) {
+        $env:JAVA_HOME = $jdk
+        $env:Path = "$jdk\bin;$env:Path"
+        Write-Host "[OK] Using Java at: $jdk" -ForegroundColor Green
+        break
+    }
 }
 
-if (Test-Path $PG_BIN) {
-    $env:Path = "$PG_BIN;$env:Path"
+$PG_PATHS = @(
+    "C:\Program Files\PostgreSQL\17\bin",
+    "C:\Program Files\PostgreSQL\18\bin"
+)
+foreach ($pg in $PG_PATHS) {
+    if (Test-Path $pg) {
+        $env:Path = "$pg;$env:Path"
+        break
+    }
 }
 
 Write-Host "Starting Spring Boot on port 8082 (profile: local)..." -ForegroundColor Cyan

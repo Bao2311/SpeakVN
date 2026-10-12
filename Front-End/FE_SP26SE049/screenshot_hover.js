@@ -9,8 +9,8 @@ const fs = require('fs');
   try {
     // Navigate to Login
     await page.goto('http://localhost:5173/login', { waitUntil: 'networkidle2' });
-    await page.type('input[type="email"]', 'nguyenductuan122004@gmail.com');
-    await page.type('input[type="password"]', 'nguyenductuan1220049556@');
+    await page.type('input[type="email"]', 'educator@fsa.com');
+    await page.type('input[type="password"]', 'Pen1112003@');
     await page.click('button[type="submit"]');
     
     // Navigate to Roadmap Manager

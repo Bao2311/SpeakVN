@@ -27,7 +27,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username:nguyenductuan11012003@gmail.com}")
+    @Value("${spring.mail.username:admin@fsa.com}")
     private String mailUsername;
 
     @Value("${mail.from:#{null}}")

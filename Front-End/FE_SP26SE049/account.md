@@ -1,25 +1,22 @@
-Admin
-email nguyenductuan11012003@gmail.com
-pass: Pen1112003@
+# Danh sách tài khoản thử nghiệm SpeakVN
 
-Educator
-email: nguyenductuan122004@gmail.com
-pass: Pen1112003@
+Mật khẩu chung cho tất cả các tài khoản: `Pen1112003@`
 
-User:
-email: nguyenductuan.dev.1112003@gmail.com
-pass: Pen1112003@
+### 1. ADMIN
+- **Email:** `admin@fsa.com`
+- **Mật khẩu:** `Pen1112003@`
+- **Vai trò:** Admin (Quản trị hệ thống, duyệt nội dung, thống kê analytics)
 
+### 2. EDUCATOR
+- **Email:** `educator@fsa.com`
+- **Mật khẩu:** `Pen1112003@`
+- **Vai trò:** Educator (Giảng viên, tạo bài học, lộ trình học, chấm feedback)
 
+### 3. STUDENT (LEARNER)
+- **Email:** `student@fsa.com`
+- **Mật khẩu:** `Pen1112003@`
+- **Vai trò:** Student (Học viên luyện phát âm giọng Nam)
 
-
-Thư mục backend java - AI Role as Senior Java Backend Developer
-/Users/penpen1112003/IntelliJ/Java_Project/com.company.FSA_Captone_2026
-
-
-Thư mục Front End: --  AI Role as Senior Front End Developer
-/Users/penpen1112003/WebstormProjects/FE_SP26SE049
-
-
-
-Tôi yêu cầu phải validate từng form nhập liệu ở admin và educator. Hãy đóng vai là một chuyên gia phát triển phần mềm ở Google phân tích và đánh giá và bổ sung validate cho tôi
+- **Email bổ sung (Đã test đầu vào):** `tested_student@fsa.com`
+- **Mật khẩu:** `Pen1112003@`
+- **Vai trò:** Student (Học viên luyện phát âm giọng Bắc)

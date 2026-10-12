@@ -19,10 +19,10 @@ const puppeteer = require('puppeteer');
     await page.goto('http://localhost:5173/login', { waitUntil: 'networkidle2' });
     
     // Fill credentials
-    await page.type('input[type="email"]', 'nguyenductuan122004@gmail.com');
+    await page.type('input[type="email"]', 'educator@fsa.com');
     
     // Assuming the password input is the second input or input[type="password"]
-    await page.type('input[type="password"]', 'nguyenductuan1220049556@');
+    await page.type('input[type="password"]', 'Pen1112003@');
     
     // Click login button (the submit button)
     await page.click('button[type="submit"]');

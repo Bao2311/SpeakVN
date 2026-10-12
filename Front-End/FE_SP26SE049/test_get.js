@@ -3,8 +3,8 @@ const axios = require('axios');
 async function test() {
   try {
     const loginRes = await axios.post('http://127.0.0.1:8082/api/v1/auth/login', {
-      email: 'nguyenductuan122004@gmail.com',
-      password: 'nguyenductuan1220049556@'
+      email: 'educator@fsa.com',
+      password: 'Pen1112003@'
     });
     const token = loginRes.data.data.accessToken;
 

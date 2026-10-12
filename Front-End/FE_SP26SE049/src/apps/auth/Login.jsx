@@ -3,7 +3,7 @@ import { Form, Input, Button, message, Checkbox } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../core/auth/AuthContext'
 import { getLearnerOnboardingPath } from '../../utils/onboarding'
-import { Lock, Mail, Home, Sparkles, User, ArrowRight } from 'lucide-react'
+import { Lock, Mail, Home, Sparkles, User, ArrowRight, Zap } from 'lucide-react'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
 import { motion } from 'framer-motion'
 import { DoodleLoading } from '../../components/ui/DoodleLoading'
@@ -20,9 +20,21 @@ const passwordRules = [
 function LoginForm() {
   const navigate = useNavigate()
   const { login, socialLogin } = useAuth()
+  const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [facebookLoading, setFacebookLoading] = useState(false)
+  const [selectedRole, setSelectedRole] = useState(null)
+
+  const handleQuickSelect = (email, role) => {
+    setSelectedRole(role)
+    form.setFieldsValue({
+      email,
+      password: 'Pen1112003@',
+      remember: true,
+    })
+    message.success(`Đã chọn tài khoản ${role}: ${email}`)
+  }
 
   const navigateByRole = useCallback((session) => {
     if (session.user.role === 'ADMIN') {
@@ -232,8 +244,60 @@ function LoginForm() {
             </div>
           </div>
 
+          {/* Quick Login 3 Roles */}
+          <div className="mb-4 p-2.5 bg-amber-50/80 border-[2px] border-slate-900 rounded-2xl shadow-[3px_3px_0_#1f2937]">
+            <div className="flex items-center justify-between mb-2 px-1">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <Zap size={13} className="text-amber-500 fill-amber-500" />
+                Đăng nhập nhanh 3 Role:
+              </span>
+              <span className="text-[9px] font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-md border border-slate-300">
+                Pass: Pen1112003@
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleQuickSelect('admin@fsa.com', 'Admin')}
+                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
+                  selectedRole === 'Admin'
+                    ? 'bg-rose-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
+                    : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
+                }`}
+              >
+                <span className="text-xs">🛡️ Admin</span>
+                <span className="text-[8px] opacity-75 truncate max-w-full">admin@fsa.com</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickSelect('educator@fsa.com', 'Educator')}
+                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
+                  selectedRole === 'Educator'
+                    ? 'bg-purple-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
+                    : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
+                }`}
+              >
+                <span className="text-xs">🎓 Educator</span>
+                <span className="text-[8px] opacity-75 truncate max-w-full">educator@fsa.com</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickSelect('student@fsa.com', 'Student')}
+                className={`py-1.5 px-2 rounded-xl border-[1.5px] border-slate-900 text-center transition-all flex flex-col items-center justify-center gap-0.5 active:translate-y-0.5 ${
+                  selectedRole === 'Student'
+                    ? 'bg-sky-400 text-white shadow-[2px_2px_0_#1f2937] font-black'
+                    : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
+                }`}
+              >
+                <span className="text-xs">🎒 Student</span>
+                <span className="text-[8px] opacity-75 truncate max-w-full">student@fsa.com</span>
+              </button>
+            </div>
+          </div>
+
           {/* Form */}
           <Form
+            form={form}
             name="login"
             layout="vertical"
             initialValues={{ remember: true }}

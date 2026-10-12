@@ -29,8 +29,8 @@ Write-Host ""
 Write-Host "  - Backend API   : http://localhost:8082/swagger-ui.html" -ForegroundColor White
 Write-Host "  - Frontend Web  : http://localhost:5173" -ForegroundColor White
 Write-Host ""
-Write-Host "  Tai khoan mau (Mat khau tat ca: Pen1112003@):" -ForegroundColor White
-Write-Host "    Admin    : nguyenductuan11012003@gmail.com" -ForegroundColor Gray
-Write-Host "    Educator : nguyenductuan122004@gmail.com" -ForegroundColor Gray
-Write-Host "    Learner  : nguyenductuan.dev.1112003@gmail.com" -ForegroundColor Gray
+Write-Host "  Tai khoan mau san sang dang nhap (Mat khau tat ca: Pen1112003@):" -ForegroundColor White
+Write-Host "    Admin    : admin@fsa.com" -ForegroundColor Gray
+Write-Host "    Educator : educator@fsa.com" -ForegroundColor Gray
+Write-Host "    Student  : student@fsa.com" -ForegroundColor Gray
 Write-Host ""
