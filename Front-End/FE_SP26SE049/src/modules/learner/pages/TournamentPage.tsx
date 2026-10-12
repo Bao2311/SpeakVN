@@ -27,6 +27,7 @@ import { useAudioRecorder } from '../../../hooks/useAudioRecorder'
 import { uploadToCloudinary } from '../../../services/cloudinaryService'
 import { ASR_BASE_URL, ASR_MODEL, ASR_LANGUAGE, ASR_SAMPLING_RATE } from '../../../config'
 import { DoodleLoading } from '../../../components/ui/DoodleLoading'
+import { playVietnameseAudio } from '../../../utils/vietnameseTTS'
 
 // HSL customized theme colors
 const REGION_THEMES: Record<string, { tint: string; bg: string; text: string; icon: string }> = {
@@ -142,18 +143,12 @@ export default function TournamentPage() {
   }, [tournament?.endsAt])
 
   const playTTS = async (text: string, region: string) => {
+    if (!text || !text.trim()) return
     setPlayingTTS(true)
     // Auto-select standard regional voice
-    const voice = region === 'BAC' ? 'Northern' : region === 'NAM' ? 'Southern' : 'Central'
+    const voice = region === 'BAC' ? 'banmai' : region === 'NAM' ? 'linhsan' : 'myan'
     try {
-      const res = await apiClient.post('/ai/tts', { text, voice })
-      const data = res?.data || res
-      if (data.async) {
-        const audio = new Audio(data.async)
-        audio.play()
-      } else {
-        message.error('Không tìm thấy tệp phát âm mẫu.')
-      }
+      await playVietnameseAudio({ text, voice })
     } catch (err) {
       console.error('[TournamentPage] TTS failed:', err)
     } finally {

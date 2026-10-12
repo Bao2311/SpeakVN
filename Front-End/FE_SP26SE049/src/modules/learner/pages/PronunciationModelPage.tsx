@@ -5,6 +5,7 @@ import { Volume2, Play, RotateCcw, Lightbulb, AlertTriangle, Sparkles, Type, Pau
 import MouthViseme, { useWordAnimation, textToVisemeKeys } from '../components/MouthViseme';
 import type { FaceType } from '../components/MouthViseme';
 import apiClient from '../../../services/apiClient';
+import { playVietnameseAudio } from '../../../utils/vietnameseTTS';
 import '@google/model-viewer';
 
 declare global {
@@ -75,13 +76,9 @@ export default function PronunciationModelPage() {
     const modelViewerRef = useRef<any>(null);
 
     const playRegionalTTS = async (text: string) => {
+        if (!text || !text.trim()) return;
         try {
-            const res = await apiClient.post('/ai/tts', { text, voice: 'banmai' });
-            const data = res?.data || res;
-            if (data.async) {
-                const audio = new Audio(data.async);
-                audio.play();
-            }
+            await playVietnameseAudio({ text, voice: 'banmai' });
         } catch (err) {
             console.error('[PronunciationModelPage] TTS failed:', err);
         }

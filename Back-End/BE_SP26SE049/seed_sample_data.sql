@@ -55,7 +55,7 @@ INSERT INTO account (
     full_name = EXCLUDED.full_name;
 
 -- Demo Learner 1 (Giọng Nam): student@fsa.com
--- 21 stars exactly matching 7 completed quizzes (7 * 3 = 21)
+-- 100% full unlocked progress: 225 quizzes * 3 stars = 675 stars, 50,000 XP, 30 days streak, 10 badges
 INSERT INTO account (
     id, email, password_hash, role_code, full_name, avatar_url, email_verified, is_active,
     region, has_done_entry_test, total_stars, total_experience, current_streak_days, max_streak_days, badge_count, created_at, updated_at
@@ -66,7 +66,7 @@ INSERT INTO account (
     'USER',
     'Học viên 1',
     'https://api.dicebear.com/7.x/adventurer/svg?seed=HocVienDemo',
-    TRUE, TRUE, 'SOUTH', TRUE, 21, 450, 3, 5, 2, NOW(), NOW()
+    TRUE, TRUE, 'SOUTH', TRUE, 675, 50000, 30, 30, 10, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
     role_code = 'USER',
@@ -74,9 +74,11 @@ INSERT INTO account (
     is_active = TRUE,
     region = 'SOUTH',
     has_done_entry_test = TRUE,
-    total_stars = 21,
-    total_experience = 450,
-    current_streak_days = 3,
+    total_stars = 675,
+    total_experience = 50000,
+    current_streak_days = 30,
+    max_streak_days = 30,
+    badge_count = 10,
     avatar_url = EXCLUDED.avatar_url,
     full_name = EXCLUDED.full_name;
 
@@ -559,3 +561,17 @@ INSERT INTO assignment (
     'OPEN',
     NOW()
 ) ON CONFLICT (id) DO NOTHING;
+
+-- 19. UNLOCK FULL PROGRESS & REWARDS FOR DEMO STUDENT 1 (student@fsa.com)
+INSERT INTO account_learning_unit (id, created_at, updated_at, created_by, updated_by, account_id, learning_unit_id, stars_earned, is_completed, highest_score, is_unlocked)
+SELECT gen_random_uuid(), NOW(), NOW(), 'system', 'system', '00000000-0000-0000-0002-000000000002'::uuid, lu.id, 3, true, 100.00, true
+FROM learning_unit lu WHERE lu.type IN ('LEVEL', 'QUIZ')
+ON CONFLICT (account_id, learning_unit_id) DO UPDATE 
+SET stars_earned = 3, is_completed = true, highest_score = 100.00, is_unlocked = true, updated_at = NOW();
+
+INSERT INTO account_reward (id, account_id, reward_catalog_id, status, progress_value, unlocked_at, created_at, updated_at)
+SELECT gen_random_uuid(), '00000000-0000-0000-0002-000000000002'::uuid, rc.id, 'UNLOCKED', 100, NOW(), NOW(), NOW()
+FROM reward_catalog rc WHERE rc.is_active = true
+ON CONFLICT (account_id, reward_catalog_id) DO UPDATE 
+SET status = 'UNLOCKED', progress_value = 100, unlocked_at = COALESCE(account_reward.unlocked_at, NOW()), updated_at = NOW();
+

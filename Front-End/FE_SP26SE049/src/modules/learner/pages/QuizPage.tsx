@@ -38,6 +38,7 @@ import { ASR_BASE_URL } from '../../../config'
 import { DoodleLoading } from '../../../components/ui/DoodleLoading'
 import MouthViseme, { useWordAnimation, textToVisemeKeys } from '../components/MouthViseme'
 import type { FaceType } from '../components/MouthViseme'
+import { playVietnameseAudio, speakNativeVietnamese } from '../../../utils/vietnameseTTS'
 
 const PAGE_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap');
@@ -508,7 +509,7 @@ const QuizPage: React.FC = () => {
     try {
       const res = await apiClient.post('/ai/tts', { text: pronWord, voice: selectedVoice })
       const data = res?.data || res
-      if (data.async) {
+      if (data && data.async) {
         const audio = new Audio(data.async)
         popupAudioRef.current = audio
         
@@ -522,19 +523,33 @@ const QuizPage: React.FC = () => {
           popupAudioRef.current = null
         }
 
-        audio.onerror = () => {
+        audio.onerror = async () => {
+          pronPlayWord(pronWord, 320)
+          await speakNativeVietnamese(pronWord, selectedVoice)
           pronStop()
           setPlayingTTS(null)
           popupAudioRef.current = null
         }
 
-        await audio.play()
+        await audio.play().catch(async () => {
+          pronPlayWord(pronWord, 320)
+          await speakNativeVietnamese(pronWord, selectedVoice)
+          pronStop()
+          setPlayingTTS(null)
+          popupAudioRef.current = null
+        })
       } else {
         pronPlayWord(pronWord, 320)
+        await speakNativeVietnamese(pronWord, selectedVoice)
+        pronStop()
+        setPlayingTTS(null)
       }
     } catch (err) {
-      console.error('[QuizPage] Popup pronunciation failed:', err)
+      console.warn('[QuizPage] Popup pronunciation fallback:', err)
       pronPlayWord(pronWord, 320)
+      await speakNativeVietnamese(pronWord, selectedVoice)
+      pronStop()
+      setPlayingTTS(null)
     }
   }
 
@@ -607,14 +622,10 @@ const QuizPage: React.FC = () => {
 
 
   const playRegionalTTS = async (text: string, voice: string) => {
+    if (!text || !text.trim()) return
     setPlayingTTS(voice)
     try {
-      const res = await apiClient.post('/ai/tts', { text, voice })
-      const data = res?.data || res
-      if (data.async) {
-        const audio = new Audio(data.async)
-        audio.play()
-      }
+      await playVietnameseAudio({ text, voice })
     } catch (err) {
       console.error('[QuizPage] TTS failed:', err)
     } finally {
@@ -1838,7 +1849,7 @@ const QuizPage: React.FC = () => {
                 </button>
               )}
               {/* Audio button — placed at the bottom right corner */}
-              {((ch.mode !== 'SPEAKING_READ' && (ch.audioUrl || ch.transcript)) ||
+              {((ch.mode !== 'SPEAKING_READ' && (ch.audioUrl || ch.transcript || ch.content || ch.skillType === 'LISTENING')) ||
                 (ch.mode === 'SPEAKING_READ' && consentGiven !== null && !answered && !isAnalyzing)) && (
                 <div className="absolute bottom-4 right-4 flex flex-col items-center gap-2">
                   <button
@@ -1847,17 +1858,20 @@ const QuizPage: React.FC = () => {
                       try {
                         const plays = audioPlays[idx] || 0;
                         if (plays < 2) {
-                          if (ch.audioUrl) {
-                            new Audio(ch.audioUrl).play();
-                          } else {
-                            const ttsVoice = (ch.region === 'TRUNG' || ch.region === 'CENTRAL') ? 'myan'
-                              : (ch.region === 'NAM' || ch.region === 'SOUTH') ? 'linhsan'
-                              : 'banmai';
-                            await playRegionalTTS(ch.transcript || ch.content, ttsVoice);
-                          }
+                          const ttsVoice = (ch.region === 'TRUNG' || ch.region === 'CENTRAL') ? 'myan'
+                            : (ch.region === 'NAM' || ch.region === 'SOUTH') ? 'linhsan'
+                            : 'banmai';
+                          setPlayingTTS(ttsVoice);
+                          await playVietnameseAudio({
+                            text: ch.transcript || ch.content,
+                            voice: ttsVoice,
+                            audioUrl: ch.audioUrl
+                          });
                           setAudioPlays(prev => ({ ...prev, [idx]: plays + 1 }));
                         }
-                      } catch (_) { }
+                      } catch (_) { } finally {
+                        setPlayingTTS(null);
+                      }
                     }}
                     className={clsx(
                       "w-16 h-16 bg-white border-[3px] border-slate-900 rounded-2xl shadow-[4px_4px_0_#1f2937] flex items-center justify-center hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all group relative",
