@@ -397,7 +397,7 @@ export default function Dashboard() {
         { icon: Map, label: 'Lộ trình', desc: 'Bản đồ học', path: '/learner/roadmap', tint: '#263D5B', bg: '#f7f4ee' },
         { icon: Trophy, label: 'Xếp hạng', desc: 'Bảng điểm', path: '/learner/leaderboard', tint: '#D97706', bg: '#fff8ee' },
         { icon: Zap, label: 'Phát âm', desc: 'Luyện ngay', path: '/learner/pronunciation', tint: '#49B6E5', bg: '#eef9fe' },
-        { icon: Gamepad2, label: 'Trò chơi', desc: 'Minigames', path: '/learner/minigames', tint: '#EC4899', bg: '#fdf2f8' },
+        { icon: Gamepad2, label: 'Trò chơi', desc: 'Ôn luyện vui', path: '/learner/minigames', tint: '#EC4899', bg: '#fdf2f8' },
         { icon: Target, label: 'Bạn bè', desc: 'Kết nối', path: '/learner/friends', tint: '#16A34A', bg: '#effaf3' },
     ]), [])
 
@@ -419,7 +419,7 @@ export default function Dashboard() {
                         <div className="space-y-6">
                             <div className="inline-flex items-center gap-3 rounded-full border-[3px] border-slate-900 bg-white px-4 py-2 shadow-[5px_5px_0_#1f2937]">
                                 <Leaf size={16} className="text-[#49B6E5]" />
-                                <span className="text-xs font-black uppercase tracking-[0.22em] text-slate-700">Learner dashboard</span>
+                                <span className="text-xs font-black uppercase tracking-[0.22em] text-slate-700">Trang cá nhân học viên</span>
                             </div>
 
                             <div className="max-w-3xl">

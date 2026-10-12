@@ -249,10 +249,10 @@ function LoginForm() {
             <div className="flex items-center justify-between mb-2 px-1">
               <span className="text-[10px] font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
                 <Zap size={13} className="text-amber-500 fill-amber-500" />
-                Đăng nhập nhanh 3 Role:
+                Đăng nhập nhanh 3 vai trò:
               </span>
               <span className="text-[9px] font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-md border border-slate-300">
-                Pass: Pen1112003@
+                Mật khẩu: Pen1112003@
               </span>
             </div>
             <div className="grid grid-cols-3 gap-1.5">
@@ -265,7 +265,7 @@ function LoginForm() {
                     : 'bg-white hover:bg-rose-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
                 }`}
               >
-                <span className="text-xs">🛡️ Admin</span>
+                <span className="text-xs font-black">🛡️ Quản trị viên</span>
                 <span className="text-[8px] opacity-75 truncate max-w-full">admin@fsa.com</span>
               </button>
               <button
@@ -277,7 +277,7 @@ function LoginForm() {
                     : 'bg-white hover:bg-purple-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
                 }`}
               >
-                <span className="text-xs">🎓 Educator</span>
+                <span className="text-xs font-black">🎓 Giảng viên</span>
                 <span className="text-[8px] opacity-75 truncate max-w-full">educator@fsa.com</span>
               </button>
               <button
@@ -289,7 +289,7 @@ function LoginForm() {
                     : 'bg-white hover:bg-sky-50 text-slate-800 shadow-[1px_1px_0_#1f2937] font-bold'
                 }`}
               >
-                <span className="text-xs">🎒 Student</span>
+                <span className="text-xs font-black">🎒 Học viên</span>
                 <span className="text-[8px] opacity-75 truncate max-w-full">student@fsa.com</span>
               </button>
             </div>

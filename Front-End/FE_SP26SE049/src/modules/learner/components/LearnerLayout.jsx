@@ -47,7 +47,7 @@ export default function LearnerLayout() {
   const [avatarErr, setAvatarErr] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const user = session?.user || { fullName: "Learner", avatar: null };
+  const user = session?.user || { fullName: "Học viên", avatar: null };
 
   useEffect(() => {
     if (!session || session.user.role !== "USER") return;
@@ -105,7 +105,7 @@ export default function LearnerLayout() {
     { key: "/learner/dashboard", label: "Trang chủ" },
     { key: "/learner/roadmap", label: "Hành trình" },
     { key: "/learner/pronunciation", label: "Phát âm" },
-    { key: "/learner/minigames", label: "Minigames" },
+    { key: "/learner/minigames", label: "Trò chơi" },
   ], []);
 
   const dropdownItems = React.useMemo(() => [
@@ -221,7 +221,7 @@ export default function LearnerLayout() {
               {/* Stats - Brutalist styling without icons */}
               <div className="hidden sm:flex items-center gap-3 rounded-full border-[2px] border-slate-900 bg-white px-3.5 py-1.5 shadow-[3px_3px_0_#1f2937] text-[10px] font-black tracking-wider uppercase">
                 <div className="flex items-center gap-1 border-r border-slate-200 pr-2.5 text-orange-600">
-                  <span>Streak:</span>
+                  <span>Chuỗi:</span>
                   <span className="text-slate-900 text-xs font-black">{user?.currentStreakDays || user?.streak || "0"}</span>
                 </div>
                 <div className="flex items-center gap-1 text-yellow-600">
@@ -250,7 +250,7 @@ export default function LearnerLayout() {
                     {initials}
                   </Avatar>
                   <div className="hidden md:block text-left">
-                    <div className="text-[11px] font-black leading-none text-slate-800 mb-0.5 truncate max-w-[100px]">{user.fullName || "User"}</div>
+                    <div className="text-[11px] font-black leading-none text-slate-800 mb-0.5 truncate max-w-[100px]">{user.fullName || "Học viên"}</div>
                     <div className="text-[9px] font-bold uppercase tracking-wider text-[#49B6E5]">Học viên</div>
                   </div>
                 </button>
@@ -262,7 +262,7 @@ export default function LearnerLayout() {
                 className="flex items-center justify-center h-10 px-4 rounded-full border-[2px] border-slate-900 bg-white text-slate-800 font-black text-xs shadow-[3px_3px_0_#1f2937] xl:hidden"
                 aria-label="Open menu"
               >
-                Menu
+                Danh mục
               </button>
             </div>
           </div>

@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div style={{ padding: 32 }}>
-      <h1>SpeakVN Portal</h1>
+      <h1>Cổng Thông Tin SpeakVN</h1>
       <p>Chào mừng bạn đến với hệ thống SpeakVN.</p>
 
       {isAuthenticated && session ? (
@@ -16,15 +16,15 @@ const HomePage: React.FC = () => {
           <p>Bạn đang đăng nhập.</p>
           <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
             {session.user.role === 'admin' && (
-              <Link to="/admin">Go to Admin Dashboard</Link>
+              <Link to="/admin">Trang quản trị hệ thống</Link>
             )}
             {session.user.role === 'educator' && (
-              <Link to="/educator">Go to Educator Dashboard</Link>
+              <Link to="/educator">Trang tổng quan giảng viên</Link>
             )}
             {session.user.role === 'user' && (
-              <Link to="/learner/roadmap">Go to Learning Roadmap</Link>
+              <Link to="/learner/roadmap">Lộ trình học tập</Link>
             )}
-            <button onClick={logout} style={{ cursor: 'pointer', color: 'red' }}>Logout</button>
+            <button onClick={logout} style={{ cursor: 'pointer', color: 'red' }}>Đăng xuất</button>
           </div>
         </div>
       ) : (

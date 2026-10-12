@@ -173,7 +173,7 @@ const MinigamesPage: React.FC = () => {
                                     Khu vui học phát âm
                                 </div>
                                 <h1 className="text-3xl font-black tracking-tight text-[#263D5B] md:text-4xl">
-                                    Minigames
+                                    Trò Chơi Ôn Luyện
                                 </h1>
                                 <p className="max-w-2xl text-sm font-bold text-slate-500 md:text-base">
                                     Chọn cặp âm rồi vào trò chơi để luyện phản xạ, ghi nhớ và sửa lỗi phát âm theo cách vui nhộn.

@@ -33,7 +33,7 @@ const NAV_ITEMS = [
   { key: '/admin/entry-test', icon: FlaskConical, label: 'Bài test đầu vào' },
   { key: '/admin/users', icon: Users, label: 'Người dùng' },
   { key: '/admin/achievements', icon: Medal, label: 'Thành tựu' },
-  { key: '/admin/minigames', icon: Gamepad2, label: 'Minigames' },
+  { key: '/admin/minigames', icon: Gamepad2, label: 'Trò chơi' },
   { key: '/admin/feedbacks', icon: MessageSquare, label: 'Phản hồi' },
   { key: '/admin/ai-config', icon: Cpu, label: 'Cấu hình AI' },
   { key: '/admin/settings', icon: Settings, label: 'Cài đặt' },
@@ -90,7 +90,7 @@ const AdminLayout = () => {
                     Speak<span className="text-[#49B6E5]">VN</span>
                   </div>
                   <div className="mt-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    ADMIN PORTAL
+                    CỔNG QUẢN TRỊ VIÊN
                   </div>
                 </motion.div>
               )}

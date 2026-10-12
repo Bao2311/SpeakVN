@@ -18,7 +18,7 @@ INSERT INTO account (
     'admin@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'ADMIN',
-    'Admin',
+    'Quản trị viên',
     TRUE, TRUE, 'NORTH', TRUE, 100, 1000, 5, 10, 3, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -37,7 +37,7 @@ INSERT INTO account (
     'educator@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'EDUCATOR',
-    'Educator',
+    'Giảng viên',
     TRUE, TRUE, 'NORTH', TRUE, 150, 1500, 10, 15, 4, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -56,7 +56,7 @@ INSERT INTO account (
     'tested_student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Student (Tested)',
+    'Học viên thử nghiệm',
     TRUE, TRUE, 'NORTH', TRUE, 220, 1850, 7, 14, 5, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,
@@ -79,7 +79,7 @@ INSERT INTO account (
     'student@fsa.com',
     '$2a$10$Wl82NGnlI1aRa77o2u0v..ua1Fbi9jfkL4DwEBFMRij9tZylRPuPG',
     'USER',
-    'Student',
+    'Học viên',
     TRUE, TRUE, 'SOUTH', TRUE, 150, 950, 3, 5, 2, NOW(), NOW()
 ) ON CONFLICT (email) DO UPDATE SET
     password_hash = EXCLUDED.password_hash,

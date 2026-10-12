@@ -9,21 +9,21 @@
         <insert tableName="dialect">
             <column name="id" value="00000000-0000-0000-0001-000000000001"/>
             <column name="name" value="NORTH"/>
-            <column name="description" value="Northern Vietnamese Dialect"/>
+            <column name="description" value="Chinh phục phát âm chuẩn — nền tảng của tiếng Việt quy chuẩn."/>
             <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
         </insert>
         <insert tableName="dialect">
             <column name="id" value="00000000-0000-0000-0001-000000000002"/>
             <column name="name" value="CENTRAL"/>
-            <column name="description" value="Central Vietnamese Dialect"/>
+            <column name="description" value="Khám phá giọng nói đặc trưng vùng đất cố đô và di sản văn hoá."/>
             <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
         </insert>
         <insert tableName="dialect">
             <column name="id" value="00000000-0000-0000-0001-000000000003"/>
             <column name="name" value="SOUTH"/>
-            <column name="description" value="Southern Vietnamese Dialect"/>
+            <column name="description" value="Làm quen với giọng Nam năng động, cởi mở và thân thiện."/>
             <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
         </insert>

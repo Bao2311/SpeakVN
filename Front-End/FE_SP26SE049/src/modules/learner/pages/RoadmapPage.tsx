@@ -168,7 +168,7 @@ const RegionCard = ({ dialect, meta, index, onSelect, isMyRegion }: any) => {
 
         <div className="p-6 flex-1 flex flex-col">
           <p className="text-slate-500 text-sm font-bold leading-relaxed mb-5 flex-1">
-            {dialect.description && dialect.description !== meta.viName ? dialect.description : meta.description}
+            {meta.description || dialect.description}
           </p>
 
           <button className="w-full h-12 rounded-2xl font-black text-white text-sm flex items-center justify-center gap-2 transition-all duration-300 border-[2.5px] border-slate-900 shadow-[4px_4px_0_#1f2937] active:translate-y-1 active:shadow-none bg-[#49B6E5]">

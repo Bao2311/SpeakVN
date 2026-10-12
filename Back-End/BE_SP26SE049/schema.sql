@@ -303,11 +303,11 @@ ALTER TABLE level ADD audio_url VARCHAR(500);
 CREATE TABLE educator_feedback (id UUID NOT NULL, attempt_id UUID NOT NULL, educator_id UUID NOT NULL, comment TEXT NOT NULL, priority VARCHAR(20) NOT NULL, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL, updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL, created_by VARCHAR(50), updated_by VARCHAR(50), CONSTRAINT educator_feedback_pkey PRIMARY KEY (id), CONSTRAINT fk_feedback_account FOREIGN KEY (educator_id) REFERENCES account(id), CONSTRAINT fk_feedback_attempt FOREIGN KEY (attempt_id) REFERENCES attempt(id));
 
 -- Changeset db/changelog/05-seed-dialect-levels.xml::20260225-seed-dialects::antigravity
-INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000001', 'NORTH', 'Northern Vietnamese Dialect', NOW(), NOW());
+INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000001', 'NORTH', 'Chinh phục phát âm chuẩn — nền tảng của tiếng Việt quy chuẩn.', NOW(), NOW());
 
-INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000002', 'CENTRAL', 'Central Vietnamese Dialect', NOW(), NOW());
+INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000002', 'CENTRAL', 'Khám phá giọng nói đặc trưng vùng đất cố đô và di sản văn hoá.', NOW(), NOW());
 
-INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000003', 'SOUTH', 'Southern Vietnamese Dialect', NOW(), NOW());
+INSERT INTO dialect (id, name, description, created_at, updated_at) VALUES ('00000000-0000-0000-0001-000000000003', 'SOUTH', 'Làm quen với giọng Nam năng động, cởi mở và thân thiện.', NOW(), NOW());
 
 -- Changeset db/changelog/05-seed-dialect-levels.xml::20260225-seed-sample-levels::antigravity
 INSERT INTO level (id, dialect_id, level_order, name, description, min_stars_required, ai_threshold, created_at, updated_at) VALUES (uuid_generate_v4(), '00000000-0000-0000-0001-000000000003', '1', 'Chào hỏi cơ bản (Nam)', 'Học cách chào hỏi với giọng miền Nam', '0', '70', NOW(), NOW());

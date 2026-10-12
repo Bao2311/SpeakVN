@@ -70,7 +70,7 @@ const EducatorLayout = () => {
                     Speak<span className="text-[#49B6E5]">VN</span>
                   </div>
                   <div className="mt-1 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    EDUCATOR PORTAL
+                    CỔNG GIẢNG VIÊN
                   </div>
                 </motion.div>
               )}
